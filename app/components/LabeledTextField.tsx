@@ -1,59 +1,80 @@
-import React, {PropsWithoutRef} from "react"
-import {useField} from "react-final-form"
+import React, { PropsWithoutRef } from "react"
+import { useField } from "react-final-form"
+import {
+  Text,
+  Input,
+  Box,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Textarea,
+} from "@chakra-ui/react"
 
-export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
+export interface LabeledTextFieldProps
+  extends PropsWithoutRef<JSX.IntrinsicElements["input"] | JSX.IntrinsicElements["textarea"]> {
   /** Field name. */
   name: string
   /** Field label. */
   label: string
-  /** Field type. Doesn't include radio buttons and checkboxes */
-  type?: "text" | "password" | "email" | "number"
+  /** Field type. Doesn't include radio buttons. */
+  type?: "text" | "password" | "email" | "number" | "checkbox" | "textarea"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
 }
 
-export const LabeledTextField = React.forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({name, label, outerProps, ...props}, ref) => {
-    const {
-      input,
-      meta: {touched, error, submitError, submitting},
-    } = useField(name, {
-      parse: props.type === "number" ? Number : undefined
-    })
+export const LabeledTextField = React.forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  LabeledTextFieldProps
+>(({ name, label, outerProps, ...props }, ref) => {
+  const {
+    input,
+    meta: { touched, error, submitError, submitting },
+  } = useField(name, {
+    parse: props.type === "number" ? Number : undefined,
+    type: props.type,
+  })
 
-    const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
+  const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
-    return (
-      <div {...outerProps}>
-        <label>
+  const { size, ...propsWithoutSize } = props as JSX.IntrinsicElements["input"]
+  const { value, ...propsWithoutValue } = propsWithoutSize
+
+  return (
+    <FormControl isInvalid={normalizedError && touched} {...outerProps} mb={6}>
+      {props.type === "checkbox" ? (
+        <Checkbox
+          {...input}
+          {...propsWithoutValue}
+          defaultChecked={input.checked}
+          ref={ref as React.ForwardedRef<HTMLInputElement>}
+        >
           {label}
-          <input {...input} disabled={submitting} {...props} ref={ref} />
-        </label>
+        </Checkbox>
+      ) : (
+        <>
+          <FormLabel htmlFor={input.name}>{label}</FormLabel>
 
-        {touched && normalizedError && (
-          <div role="alert" style={{color: "red"}}>
-            {normalizedError}
-          </div>
-        )}
+          {props.type === "textarea" ? (
+            <Textarea
+              {...input}
+              disabled={submitting}
+              {...(props as JSX.IntrinsicElements["textarea"])}
+              ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
+            />
+          ) : (
+            <Input
+              {...input}
+              disabled={submitting}
+              {...(propsWithoutSize as Omit<JSX.IntrinsicElements["input"], "size">)}
+              ref={ref as React.ForwardedRef<HTMLInputElement>}
+            />
+          )}
+        </>
+      )}
 
-        <style jsx>{`
-          label {
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            font-size: 1rem;
-          }
-          input {
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            border: 1px solid purple;
-            appearance: none;
-            margin-top: 0.5rem;
-          }
-        `}</style>
-      </div>
-    )
-  },
-)
+      <FormErrorMessage>{normalizedError}</FormErrorMessage>
+    </FormControl>
+  )
+})
 
 export default LabeledTextField
