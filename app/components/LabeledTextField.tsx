@@ -1,9 +1,7 @@
 import React, { PropsWithoutRef } from "react"
 import { useField } from "react-final-form"
 import {
-  Text,
   Input,
-  Box,
   Checkbox,
   FormControl,
   FormLabel,

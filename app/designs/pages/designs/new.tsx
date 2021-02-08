@@ -1,6 +1,6 @@
 import React from "react"
 import Layout from "app/layouts/Layout"
-import { Link, useRouter, useMutation, BlitzPage } from "blitz"
+import { useRouter, useMutation, BlitzPage } from "blitz"
 import createDesign from "app/designs/mutations/createDesign"
 import DesignForm from "app/designs/components/DesignForm"
 import { Container, Heading } from "@chakra-ui/react"

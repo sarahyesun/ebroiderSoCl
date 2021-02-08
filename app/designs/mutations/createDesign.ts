@@ -1,5 +1,5 @@
 import { Ctx } from "blitz"
-import db, { Prisma } from "db"
+import db from "db"
 
 export default async function createDesign(
   { name, description, isPublic }: { name: string; description: string; isPublic: boolean },
