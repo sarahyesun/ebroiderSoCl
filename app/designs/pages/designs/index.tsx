@@ -1,9 +1,34 @@
-import { Suspense } from "react"
+import React, { Suspense } from "react"
 import Layout from "app/layouts/Layout"
 import { Link, usePaginatedQuery, useRouter, BlitzPage } from "blitz"
 import getDesigns from "app/designs/queries/getDesigns"
+import {
+  Heading,
+  Box,
+  Button,
+  Container,
+  Wrap,
+  WrapItem,
+  VStack,
+  HStack,
+  Spacer,
+  IconButton,
+} from "@chakra-ui/react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faAngleDoubleLeft, faAngleDoubleRight, faPlus } from "@fortawesome/free-solid-svg-icons"
+import DesignCard from "app/designs/components/design-card"
 
-const ITEMS_PER_PAGE = 100
+const ITEMS_PER_PAGE = 10
+
+const DesignsListPlaceholder = () => (
+  <Wrap spacing={10}>
+    {Array.from(Array(4).keys()).map((i) => (
+      <WrapItem key={i}>
+        <DesignCard />
+      </WrapItem>
+    ))}
+  </Wrap>
+)
 
 export const DesignsList = () => {
   const router = useRouter()
@@ -18,40 +43,50 @@ export const DesignsList = () => {
   const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
   return (
-    <div>
-      <ul>
+    <VStack spacing={10}>
+      <Wrap spacing={10}>
         {designs.map((design) => (
-          <li key={design.id}>
-            <Link href={`/designs/${design.id}`}>
-              <a>{design.name}</a>
-            </Link>
-          </li>
+          <WrapItem>
+            <DesignCard key={design.id} design={design} />
+          </WrapItem>
         ))}
-      </ul>
+      </Wrap>
+      <HStack width="100%">
+        {page !== 0 && (
+          <IconButton aria-label="Previous page" onClick={goToPreviousPage}>
+            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          </IconButton>
+        )}
 
-      <button disabled={page === 0} onClick={goToPreviousPage}>
-        Previous
-      </button>
-      <button disabled={!hasMore} onClick={goToNextPage}>
-        Next
-      </button>
-    </div>
+        <Spacer />
+
+        {hasMore && (
+          <IconButton aria-label="Next page" onClick={goToNextPage}>
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </IconButton>
+        )}
+      </HStack>
+    </VStack>
   )
 }
 
 const DesignsPage: BlitzPage = () => {
   return (
-    <div>
-      <p>
-        <Link href="/designs/new">
-          <a>Create Design</a>
-        </Link>
-      </p>
+    <Container size="lg">
+      <Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
+        <Heading>My Designs</Heading>
 
-      <Suspense fallback={<div>Loading...</div>}>
+        <Link href="/designs/new" passHref>
+          <Button leftIcon={<FontAwesomeIcon icon={faPlus} />} colorScheme="blue" as="a">
+            New Design
+          </Button>
+        </Link>
+      </Box>
+
+      <Suspense fallback={<DesignsListPlaceholder />}>
         <DesignsList />
       </Suspense>
-    </div>
+    </Container>
   )
 }
 
