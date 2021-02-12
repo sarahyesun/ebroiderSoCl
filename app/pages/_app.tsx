@@ -4,6 +4,11 @@ import { queryCache } from "react-query"
 import { ChakraProvider } from "@chakra-ui/react"
 import LoginForm from "app/auth/components/LoginForm"
 
+// Fix Font Awesome sizing
+import { config } from "@fortawesome/fontawesome-svg-core"
+import "@fortawesome/fontawesome-svg-core/styles.css"
+config.autoAddCss = false
+
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
   const router = useRouter()
