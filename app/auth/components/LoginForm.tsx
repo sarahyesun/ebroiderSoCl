@@ -1,9 +1,11 @@
 import React from "react"
-import { AuthenticationError, Link, useMutation } from "blitz"
+import { AuthenticationError, useMutation } from "blitz"
 import { LabeledTextField } from "app/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/components/Form"
 import login from "app/auth/mutations/login"
 import { LoginInput } from "app/auth/validations"
+import { Heading } from "@chakra-ui/react"
+import WrappedLink from "app/components/link"
 
 type LoginFormProps = {
   onSuccess?: () => void
@@ -14,7 +16,7 @@ export const LoginForm = (props: LoginFormProps) => {
 
   return (
     <div>
-      <h1>Login</h1>
+      <Heading mb={5}>Login</Heading>
 
       <Form
         submitText="Login"
@@ -26,7 +28,7 @@ export const LoginForm = (props: LoginFormProps) => {
             props.onSuccess?.()
           } catch (error) {
             if (error instanceof AuthenticationError) {
-              return { [FORM_ERROR]: "Sorry, those credentials are invalid" }
+              return { [FORM_ERROR]: "Sorry, those credentials are invalid." }
             } else {
               return {
                 [FORM_ERROR]:
@@ -41,7 +43,7 @@ export const LoginForm = (props: LoginFormProps) => {
       </Form>
 
       <div style={{ marginTop: "1rem" }}>
-        Or <Link href="/signup">Sign Up</Link>
+        Or, <WrappedLink href="/signup">sign up</WrappedLink>.
       </div>
     </div>
   )

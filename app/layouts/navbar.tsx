@@ -1,17 +1,11 @@
 import React, { Suspense, useCallback, useState } from "react"
-import { Flex, Heading, Box, Button, Text, IconButton, Wrap } from "@chakra-ui/react"
+import { Flex, Heading, Box, Button, IconButton } from "@chakra-ui/react"
 import { useMutation } from "blitz"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons"
 import WrappedLink from "app/components/link"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
-
-const MenuItems = ({ children }) => (
-  <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
-    {children}
-  </Text>
-)
 
 const AuthenticatedLinks = ({ show }: { show: boolean }) => {
   const currentUser = useCurrentUser()
@@ -93,6 +87,7 @@ const Navbar = () => {
       padding={6}
       bg="black"
       color="white"
+      mb={10}
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg">
