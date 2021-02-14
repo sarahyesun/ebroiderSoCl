@@ -1,11 +1,15 @@
-import { Ctx } from "blitz"
-import db from "db"
+import { Ctx } from "blitz";
+import db from "db";
 
 export default async function createDesign(
-  { name, description, isPublic }: { name: string; description: string; isPublic: boolean },
+  {
+    name,
+    description,
+    isPublic,
+  }: { name: string; description: string; isPublic: boolean },
   ctx: Ctx
 ) {
-  ctx.session.authorize()
+  ctx.session.authorize();
 
   const design = await db.design.create({
     data: {
@@ -19,7 +23,7 @@ export default async function createDesign(
         },
       },
     },
-  })
+  });
 
-  return design
+  return design;
 }

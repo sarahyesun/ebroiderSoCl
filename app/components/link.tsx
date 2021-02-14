@@ -1,5 +1,8 @@
-import { Link as DisplayLink, LinkProps as DisplayLinkProps } from "@chakra-ui/react"
-import { Link, LinkProps } from "blitz"
+import {
+  Link as DisplayLink,
+  LinkProps as DisplayLinkProps,
+} from "@chakra-ui/react";
+import { Link, LinkProps } from "blitz";
 
 const WrappedLink = ({
   children,
@@ -9,6 +12,6 @@ const WrappedLink = ({
   <Link {...props} passHref>
     <DisplayLink {...boxProps}>{children}</DisplayLink>
   </Link>
-)
+);
 
-export default WrappedLink
+export default WrappedLink;

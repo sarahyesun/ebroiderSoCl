@@ -1,13 +1,19 @@
-import { AppProps, ErrorComponent, useRouter, AuthenticationError, AuthorizationError } from "blitz"
-import { ErrorBoundary, FallbackProps } from "react-error-boundary"
-import { queryCache } from "react-query"
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
-import LoginForm from "app/auth/components/LoginForm"
+import {
+  AppProps,
+  ErrorComponent,
+  useRouter,
+  AuthenticationError,
+  AuthorizationError,
+} from "blitz";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { queryCache } from "react-query";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import LoginForm from "app/auth/components/LoginForm";
 
 // Fix Font Awesome sizing
-import { config } from "@fortawesome/fontawesome-svg-core"
-import "@fortawesome/fontawesome-svg-core/styles.css"
-config.autoAddCss = false
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 
 const theme = extendTheme({
   components: {
@@ -19,11 +25,11 @@ const theme = extendTheme({
       },
     },
   },
-})
+});
 
 export default function App({ Component, pageProps }: AppProps) {
-  const getLayout = Component.getLayout || ((page) => page)
-  const router = useRouter()
+  const getLayout = Component.getLayout ?? ((page) => page);
+  const router = useRouter();
 
   return (
     <ChakraProvider theme={theme}>
@@ -33,31 +39,33 @@ export default function App({ Component, pageProps }: AppProps) {
         onReset={() => {
           // This ensures the Blitz useQuery hooks will automatically refetch
           // data any time you reset the error boundary
-          queryCache.resetErrorBoundaries()
+          queryCache.resetErrorBoundaries();
         }}
       >
         {getLayout(<Component {...pageProps} />)}
       </ErrorBoundary>
     </ChakraProvider>
-  )
+  );
 }
 
 function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   if (error instanceof AuthenticationError) {
-    return <LoginForm onSuccess={resetErrorBoundary} />
-  } else if (error instanceof AuthorizationError) {
+    return <LoginForm onSuccess={resetErrorBoundary} />;
+  }
+
+  if (error instanceof AuthorizationError) {
     return (
       <ErrorComponent
         statusCode={(error as any).statusCode}
         title="Sorry, you are not authorized to access this"
       />
-    )
-  } else {
-    return (
-      <ErrorComponent
-        statusCode={(error as any)?.statusCode || 400}
-        title={error?.message || error?.name}
-      />
-    )
+    );
   }
+
+  return (
+    <ErrorComponent
+      statusCode={(error as any)?.statusCode || 400}
+      title={error?.message || error?.name}
+    />
+  );
 }

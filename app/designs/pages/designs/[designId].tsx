@@ -1,14 +1,21 @@
-import { Suspense } from "react"
-import Layout from "app/layouts/Layout"
-import { Link, useRouter, useQuery, useParam, BlitzPage, useMutation } from "blitz"
-import getDesign from "app/designs/queries/getDesign"
-import deleteDesign from "app/designs/mutations/deleteDesign"
+import { Suspense } from "react";
+import Layout from "app/layouts/Layout";
+import {
+  Link,
+  useRouter,
+  useQuery,
+  useParam,
+  BlitzPage,
+  useMutation,
+} from "blitz";
+import getDesign from "app/designs/queries/getDesign";
+import deleteDesign from "app/designs/mutations/deleteDesign";
 
 export const Design = () => {
-  const router = useRouter()
-  const designId = useParam("designId", "number")
-  const [design] = useQuery(getDesign, { where: { id: designId } })
-  const [deleteDesignMutation] = useMutation(deleteDesign)
+  const router = useRouter();
+  const designId = useParam("designId", "number");
+  const [design] = useQuery(getDesign, { where: { id: designId } });
+  const [deleteDesignMutation] = useMutation(deleteDesign);
 
   return (
     <div>
@@ -23,16 +30,16 @@ export const Design = () => {
         type="button"
         onClick={async () => {
           if (window.confirm("This will be deleted")) {
-            await deleteDesignMutation({ where: { id: design.id } })
-            router.push("/designs")
+            await deleteDesignMutation({ where: { id: design.id } });
+            await router.push("/designs");
           }
         }}
       >
         Delete
       </button>
     </div>
-  )
-}
+  );
+};
 
 const ShowDesignPage: BlitzPage = () => {
   return (
@@ -47,9 +54,9 @@ const ShowDesignPage: BlitzPage = () => {
         <Design />
       </Suspense>
     </div>
-  )
-}
+  );
+};
 
-ShowDesignPage.getLayout = (page) => <Layout title={"Design"}>{page}</Layout>
+ShowDesignPage.getLayout = (page) => <Layout title={"Design"}>{page}</Layout>;
 
-export default ShowDesignPage
+export default ShowDesignPage;

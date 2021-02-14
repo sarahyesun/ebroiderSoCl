@@ -1,5 +1,5 @@
-const { pathsToModuleNameMapper } = require("ts-jest/utils")
-const { compilerOptions } = require("./tsconfig")
+const { pathsToModuleNameMapper } = require("ts-jest/utils");
+const { compilerOptions } = require("./tsconfig");
 
 module.exports = {
   // Test setup file
@@ -9,7 +9,12 @@ module.exports = {
   testEnvironment: "jest-environment-jsdom-fourteen",
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
-  testPathIgnorePatterns: ["/node_modules/", "/.blitz/", "/.next/", "<rootDir>/db/migrations"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/.blitz/",
+    "/.next/",
+    "<rootDir>/db/migrations",
+  ],
   transformIgnorePatterns: ["[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"],
   transform: {
     "^.+\\.(ts|tsx)$": "babel-jest",
@@ -22,10 +27,18 @@ module.exports = {
     // This ensures any path aliases in tsconfig also work in jest
     ...pathsToModuleNameMapper(compilerOptions.paths || {}),
     "\\.(css|less|sass|scss)$": "identity-obj-proxy",
-    "\\.(gif|ttf|eot|svg|png|jpg|jpeg)$": "<rootDir>/test/__mocks__/fileMock.js",
+    "\\.(gif|ttf|eot|svg|png|jpg|jpeg)$":
+      "<rootDir>/test/__mocks__/fileMock.js",
   },
-  watchPlugins: ["jest-watch-typeahead/filename", "jest-watch-typeahead/testname"],
+  watchPlugins: [
+    "jest-watch-typeahead/filename",
+    "jest-watch-typeahead/testname",
+  ],
   // Coverage output
   coverageDirectory: ".coverage",
-  collectCoverageFrom: ["**/*.{js,jsx,ts,tsx}", "!**/*.d.ts", "!**/node_modules/**"],
-}
+  collectCoverageFrom: [
+    "**/*.{js,jsx,ts,tsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**",
+  ],
+};

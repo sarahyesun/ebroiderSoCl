@@ -1,5 +1,6 @@
-import React, { PropsWithoutRef } from "react"
-import { useField } from "react-final-form"
+import React, { PropsWithoutRef } from "react";
+import { useField } from "react-final-form";
+import { Except } from "type-fest";
 import {
   Input,
   Checkbox,
@@ -7,17 +8,19 @@ import {
   FormLabel,
   FormErrorMessage,
   Textarea,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 
 export interface LabeledTextFieldProps
-  extends PropsWithoutRef<JSX.IntrinsicElements["input"] | JSX.IntrinsicElements["textarea"]> {
+  extends PropsWithoutRef<
+    JSX.IntrinsicElements["input"] | JSX.IntrinsicElements["textarea"]
+  > {
   /** Field name. */
-  name: string
+  name: string;
   /** Field label. */
-  label: string
+  label: string;
   /** Field type. Doesn't include radio buttons. */
-  type?: "text" | "password" | "email" | "number" | "checkbox" | "textarea"
-  outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
+  type?: "text" | "password" | "email" | "number" | "checkbox" | "textarea";
+  outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>;
 }
 
 export const LabeledTextField = React.forwardRef<
@@ -30,12 +33,14 @@ export const LabeledTextField = React.forwardRef<
   } = useField(name, {
     parse: props.type === "number" ? Number : undefined,
     type: props.type,
-  })
+  });
 
-  const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
+  const normalizedError = Array.isArray(error)
+    ? error.join(", ")
+    : error || submitError;
 
-  const { size, ...propsWithoutSize } = props as JSX.IntrinsicElements["input"]
-  const { value, ...propsWithoutValue } = propsWithoutSize
+  const { size, ...propsWithoutSize } = props as JSX.IntrinsicElements["input"];
+  const { value, ...propsWithoutValue } = propsWithoutSize;
 
   return (
     <FormControl isInvalid={normalizedError && touched} {...outerProps} mb={6}>
@@ -63,7 +68,10 @@ export const LabeledTextField = React.forwardRef<
             <Input
               {...input}
               disabled={submitting}
-              {...(propsWithoutSize as Omit<JSX.IntrinsicElements["input"], "size">)}
+              {...(propsWithoutSize as Except<
+                JSX.IntrinsicElements["input"],
+                "size"
+              >)}
               ref={ref as React.ForwardedRef<HTMLInputElement>}
             />
           )}
@@ -72,7 +80,7 @@ export const LabeledTextField = React.forwardRef<
 
       <FormErrorMessage>{normalizedError}</FormErrorMessage>
     </FormControl>
-  )
-})
+  );
+});
 
-export default LabeledTextField
+export default LabeledTextField;

@@ -1,24 +1,30 @@
-import React, { ReactNode, PropsWithoutRef } from "react"
-import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
-import * as z from "zod"
-import { Alert, AlertDescription, AlertIcon, Button } from "@chakra-ui/react"
-export { FORM_ERROR } from "final-form"
+import React, { ReactNode, PropsWithoutRef } from "react";
+import {
+  Form as FinalForm,
+  FormProps as FinalFormProps,
+} from "react-final-form";
+import * as z from "zod";
+import { Alert, AlertDescription, AlertIcon, Button } from "@chakra-ui/react";
+export { FORM_ERROR } from "final-form";
+import { Except } from "type-fest";
 
-type ChildWithRenderMethod = (options: { submitButton: React.ReactNode }) => React.ReactNode
+type ChildWithRenderMethod = (options: {
+  submitButton: React.ReactNode;
+}) => React.ReactNode;
 
 const hasRenderMethod = (children: any): children is ChildWithRenderMethod =>
-  typeof children === "function"
+  typeof children === "function";
 
 type FormProps<S extends z.ZodType<any, any>> = {
   /** All your form fields */
-  children: ReactNode | ChildWithRenderMethod
+  children: ReactNode | ChildWithRenderMethod;
   /** Text to display in the submit button */
-  submitText: string
-  submitIcon?: React.ReactElement
-  schema?: S
-  onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
-  initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
-} & Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit">
+  submitText: string;
+  submitIcon?: React.ReactElement;
+  schema?: S;
+  onSubmit: FinalFormProps<z.infer<S>>["onSubmit"];
+  initialValues?: FinalFormProps<z.infer<S>>["initialValues"];
+} & Except<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit">;
 
 export function Form<S extends z.ZodType<any, any>>({
   children,
@@ -33,11 +39,14 @@ export function Form<S extends z.ZodType<any, any>>({
     <FinalForm
       initialValues={initialValues}
       validate={(values) => {
-        if (!schema) return
+        if (!schema) {
+          return;
+        }
+
         try {
-          schema.parse(values)
-        } catch (error) {
-          return error.formErrors.fieldErrors
+          schema.parse(values);
+        } catch (error: unknown) {
+          return (error as any).formErrors.fieldErrors;
         }
       }}
       onSubmit={onSubmit}
@@ -79,7 +88,7 @@ export function Form<S extends z.ZodType<any, any>>({
         </form>
       )}
     />
-  )
+  );
 }
 
-export default Form
+export default Form;

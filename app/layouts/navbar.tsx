@@ -1,17 +1,17 @@
-import React, { Suspense, useCallback, useState } from "react"
-import { Flex, Heading, Box, Button, IconButton } from "@chakra-ui/react"
-import { useMutation } from "blitz"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons"
-import WrappedLink from "app/components/link"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
-import logout from "app/auth/mutations/logout"
+import React, { Suspense, useCallback, useState } from "react";
+import { Flex, Heading, Box, Button, IconButton } from "@chakra-ui/react";
+import { useMutation } from "blitz";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import WrappedLink from "app/components/link";
+import { useCurrentUser } from "app/hooks/useCurrentUser";
+import logout from "app/auth/mutations/logout";
 
 const AuthenticatedLinks = ({ show }: { show: boolean }) => {
-  const currentUser = useCurrentUser()
+  const currentUser = useCurrentUser();
 
   if (!currentUser) {
-    return null
+    return null;
   }
 
   const links = [
@@ -27,11 +27,14 @@ const AuthenticatedLinks = ({ show }: { show: boolean }) => {
       href: "/orders",
       label: "My Orders",
     },
-  ]
+  ];
 
   return (
     <>
-      <Box display={{ sm: show ? "block" : "none", md: "block" }} mt={{ base: 4, md: 0 }}>
+      <Box
+        display={{ sm: show ? "block" : "none", md: "block" }}
+        mt={{ base: 4, md: 0 }}
+      >
         {links.map((link) => (
           <WrappedLink key={link.href} href={link.href} boxProps={{ mr: 5 }}>
             {link.label}
@@ -39,16 +42,22 @@ const AuthenticatedLinks = ({ show }: { show: boolean }) => {
         ))}
       </Box>
     </>
-  )
-}
+  );
+};
 
-const LoginButtons = ({ onLogout, loggedIn }: { onLogout: () => void; loggedIn: boolean }) => {
+const LoginButtons = ({
+  onLogout,
+  loggedIn,
+}: {
+  onLogout: () => void;
+  loggedIn: boolean;
+}) => {
   if (loggedIn) {
     return (
       <Button colorScheme="blue" onClick={onLogout} variant="link" size="lg">
         Logout
       </Button>
-    )
+    );
   }
 
   return (
@@ -60,23 +69,27 @@ const LoginButtons = ({ onLogout, loggedIn }: { onLogout: () => void; loggedIn: 
         <WrappedLink href="/signup">Signup</WrappedLink>
       </Button>
     </>
-  )
-}
+  );
+};
 
 const LoginButtonsWrapper = () => {
-  const currentUser = useCurrentUser()
-  const [logoutMutation] = useMutation(logout)
+  const currentUser = useCurrentUser();
+  const [logoutMutation] = useMutation(logout);
 
   const handleLogout = useCallback(async () => {
-    await logoutMutation()
-  }, [logoutMutation])
+    await logoutMutation();
+  }, [logoutMutation]);
 
-  return <LoginButtons onLogout={handleLogout} loggedIn={currentUser ? true : false} />
-}
+  return (
+    <LoginButtons onLogout={handleLogout} loggedIn={Boolean(currentUser)} />
+  );
+};
 
 const Navbar = () => {
-  const [show, setShow] = useState(false)
-  const handleToggle = () => setShow(!show)
+  const [show, setShow] = useState(false);
+  const handleToggle = () => {
+    setShow(!show);
+  };
 
   return (
     <Flex
@@ -96,7 +109,12 @@ const Navbar = () => {
       </Flex>
 
       <Box display={{ base: "block", md: "none" }} onClick={handleToggle}>
-        <svg fill="white" width="12px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          fill="white"
+          width="12px"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <title>Menu</title>
           <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
         </svg>
@@ -111,7 +129,10 @@ const Navbar = () => {
         <WrappedLink href="/designs">Public Designs</WrappedLink>
       </Box>
 
-      <Box display={{ sm: show ? "block" : "none", md: "flex" }} alignItems="center">
+      <Box
+        display={{ sm: show ? "block" : "none", md: "flex" }}
+        alignItems="center"
+      >
         <Suspense fallback={<div />}>
           <AuthenticatedLinks show={show} />
         </Suspense>
@@ -125,12 +146,21 @@ const Navbar = () => {
           _hover={{ background: "white", color: "black" }}
         />
 
-        <Suspense fallback={<LoginButtons loggedIn={false} onLogout={() => {}} />}>
+        <Suspense
+          fallback={
+            <LoginButtons
+              loggedIn={false}
+              onLogout={() => {
+                /* do nothing */
+              }}
+            />
+          }
+        >
           <LoginButtonsWrapper />
         </Suspense>
       </Box>
     </Flex>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

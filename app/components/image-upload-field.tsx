@@ -1,33 +1,35 @@
-import React from "react"
-import { useField } from "react-final-form"
-import { Button, Box } from "@chakra-ui/react"
-import { ArrowUpIcon } from "@chakra-ui/icons"
+import React from "react";
+import { useField } from "react-final-form";
+import { Button, Box } from "@chakra-ui/react";
+import { ArrowUpIcon } from "@chakra-ui/icons";
 
 type ImageUploadFieldProps = {
-  label: string
-  name: string
-}
+  label: string;
+  name: string;
+};
 
 const cloneFileList = (list: FileList) => {
-  const newList: File[] = []
+  const newList: File[] = [];
 
-  for (let i = 0; i < list.length; i++) {
-    newList.push(list[i])
+  for (const element of list) {
+    newList.push(element);
   }
 
-  return newList
-}
+  return newList;
+};
 
 const ImageUploadField = (props: ImageUploadFieldProps) => {
   const {
     input: { value, onChange, ...input },
-  } = useField(props.name)
+  } = useField(props.name);
 
   return (
     <Box mb={6}>
       <input
         {...input}
-        onChange={({ target }) => onChange(cloneFileList(target.files ?? new FileList()))}
+        onChange={({ target }) => {
+          onChange(cloneFileList(target.files ?? new FileList()));
+        }}
         type="file"
         id={props.name}
         style={{ display: "none" }}
@@ -43,7 +45,7 @@ const ImageUploadField = (props: ImageUploadFieldProps) => {
         {props.label}
       </Button>
     </Box>
-  )
-}
+  );
+};
 
-export default ImageUploadField
+export default ImageUploadField;
