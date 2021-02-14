@@ -4,9 +4,14 @@ import * as z from "zod"
 import { Alert, AlertDescription, AlertIcon, Button } from "@chakra-ui/react"
 export { FORM_ERROR } from "final-form"
 
+type ChildWithRenderMethod = (options: { submitButton: React.ReactNode }) => React.ReactNode
+
+const hasRenderMethod = (children: any): children is ChildWithRenderMethod =>
+  typeof children === "function"
+
 type FormProps<S extends z.ZodType<any, any>> = {
   /** All your form fields */
-  children: ReactNode
+  children: ReactNode | ChildWithRenderMethod
   /** Text to display in the submit button */
   submitText: string
   submitIcon?: React.ReactElement
@@ -46,16 +51,31 @@ export function Form<S extends z.ZodType<any, any>>({
           )}
 
           {/* Form fields supplied as children are rendered here */}
-          {children}
+          {hasRenderMethod(children)
+            ? children({
+                submitButton: (
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    colorScheme="blue"
+                    leftIcon={submitIcon ?? undefined}
+                  >
+                    {submitText}
+                  </Button>
+                ),
+              })
+            : children}
 
-          <Button
-            type="submit"
-            disabled={submitting}
-            colorScheme="blue"
-            leftIcon={submitIcon ?? undefined}
-          >
-            {submitText}
-          </Button>
+          {!hasRenderMethod(children) && (
+            <Button
+              type="submit"
+              disabled={submitting}
+              colorScheme="blue"
+              leftIcon={submitIcon ?? undefined}
+            >
+              {submitText}
+            </Button>
+          )}
         </form>
       )}
     />

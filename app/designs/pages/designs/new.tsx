@@ -11,7 +11,7 @@ const NewDesignPage: BlitzPage = () => {
   const [createDesignMutation] = useMutation(createDesign)
 
   return (
-    <Container>
+    <Container size="lg">
       <Heading mb={6}>New Design</Heading>
 
       <DesignForm
