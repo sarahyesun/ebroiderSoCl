@@ -10,7 +10,7 @@ export default async function getDesigns(
   { where, orderBy, skip = 0, take }: GetDesignsInput,
   ctx: Ctx
 ) {
-  ctx.session.authorize();
+  ctx.session.$authorize();
 
   const designs = await db.design.findMany({
     where,

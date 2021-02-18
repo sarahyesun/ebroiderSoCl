@@ -9,7 +9,7 @@ export default async function createDesign(
   }: { name: string; description: string; isPublic: boolean },
   ctx: Ctx
 ) {
-  ctx.session.authorize();
+  ctx.session.$authorize();
 
   const design = await db.design.create({
     data: {

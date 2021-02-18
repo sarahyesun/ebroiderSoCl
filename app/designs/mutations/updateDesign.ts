@@ -7,7 +7,7 @@ export default async function updateDesign(
   { where, data }: UpdateDesignInput,
   ctx: Ctx
 ) {
-  ctx.session.authorize();
+  ctx.session.$authorize();
 
   const design = await db.design.update({ where, data });
 

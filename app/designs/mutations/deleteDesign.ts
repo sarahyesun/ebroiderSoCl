@@ -7,7 +7,7 @@ export default async function deleteDesign(
   { where }: DeleteDesignInput,
   ctx: Ctx
 ) {
-  ctx.session.authorize();
+  ctx.session.$authorize();
 
   const design = await db.design.delete({ where });
 
