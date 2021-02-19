@@ -1,31 +1,31 @@
-import { Ctx, SecurePassword } from "blitz";
-import db from "db";
-import { SignupInput, SignupInputType } from "app/auth/validations";
-import { PrismaClientKnownRequestError } from "@prisma/client";
+import {Ctx, SecurePassword} from 'blitz';
+import db from 'db';
+import {SignupInput, SignupInputType} from 'app/auth/validations';
+import {PrismaClientKnownRequestError, Role} from '@prisma/client';
 
-export default async function signup(input: SignupInputType, { session }: Ctx) {
-  // This throws an error if input is invalid
-  const { email, password } = SignupInput.parse(input);
+export default async function signup(input: SignupInputType, {session}: Ctx) {
+	// This throws an error if input is invalid
+	const {email, password} = SignupInput.parse(input);
 
-  try {
-    const hashedPassword = await SecurePassword.hash(password);
-    const user = await db.user.create({
-      data: { email: email.toLowerCase(), hashedPassword, role: "user" },
-      select: { id: true, name: true, email: true, role: true },
-    });
+	try {
+		const hashedPassword = await SecurePassword.hash(password);
+		const user = await db.user.create({
+			data: {email: email.toLowerCase(), hashedPassword, role: Role.USER},
+			select: {id: true, name: true, email: true, role: true}
+		});
 
-    await session.create({ userId: user.id, roles: [user.role] });
+		await session.$create({userId: user.id, roles: Role.USER});
 
-    return user;
-  } catch (error: unknown) {
-    if (
-      error instanceof PrismaClientKnownRequestError &&
-      error.code === "P2002" &&
-      (error.meta as any)?.target?.includes("email")
-    ) {
-      throw new Error("This email is already being used.");
-    }
+		return user;
+	} catch (error: unknown) {
+		if (
+			error instanceof PrismaClientKnownRequestError &&
+      error.code === 'P2002' &&
+      (error.meta as any)?.target?.includes('email')
+		) {
+			throw new Error('This email is already being used.');
+		}
 
-    throw error;
-  }
+		throw error;
+	}
 }

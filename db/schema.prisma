@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -12,6 +12,11 @@ generator client {
 
 // --------------------------------------
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id             Int       @default(autoincrement()) @id
   createdAt      DateTime  @default(now())
@@ -19,7 +24,7 @@ model User {
   name           String?
   email          String    @unique
   hashedPassword String?
-  role           String    @default("user")
+  role           Role
   sessions       Session[]
 }
 
