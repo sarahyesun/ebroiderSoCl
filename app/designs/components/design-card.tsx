@@ -1,6 +1,5 @@
 import {LinkBox, LinkOverlay, Box, Text, Skeleton} from '@chakra-ui/react';
 import {Design} from '@prisma/client';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Image from 'next/image';
 import {Link} from 'blitz';
 

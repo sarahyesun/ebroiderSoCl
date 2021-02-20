@@ -51,8 +51,8 @@ export const DesignsList = () => {
 		<VStack spacing={10}>
 			<Wrap spacing={10}>
 				{designs.map(design => (
-					<WrapItem>
-						<DesignCard key={design.id} design={design} />
+					<WrapItem key={design.id}>
+						<DesignCard design={design} />
 					</WrapItem>
 				))}
 			</Wrap>

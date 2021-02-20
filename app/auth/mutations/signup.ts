@@ -14,7 +14,7 @@ export default async function signup(input: SignupInputType, {session}: Ctx) {
 			select: {id: true, name: true, email: true, role: true}
 		});
 
-		await session.$create({userId: user.id, roles: Role.USER});
+		await session.$create({userId: user.id, roles: [Role.USER]});
 
 		return user;
 	} catch (error: unknown) {

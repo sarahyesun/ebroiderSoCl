@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import * as z from 'zod';
 import {Design} from '@prisma/client';
 import {Grid, Box} from '@chakra-ui/react';
@@ -10,8 +10,8 @@ import ImageUploadPreview from 'app/components/image-upload-preview';
 
 type EditableFields = Except<
 Design,
-'createdAt' | 'updatedAt' | 'userId' | 'id' | 'isApproved'
->;
+'createdAt' | 'updatedAt' | 'userId' | 'id' | 'isApproved' | 'price'
+> & {designId: string};
 
 type DesignFormProps = {
 	initialValues: Partial<EditableFields>;
@@ -34,7 +34,14 @@ const DesignForm = ({
 	return (
 		<Form
 			submitText="Create Design"
-			onSubmit={onSubmit}
+			onSubmit={async values => {
+				// Upload design
+				const formData = new FormData();
+				formData.append('file', values.design[0]);
+				const {id} = await (await fetch('/api/upload', {body: formData, method: 'POST'})).json();
+
+				await onSubmit({...values, designId: id});
+			}}
 			submitIcon={submitIcon}
 			schema={schema}
 			initialValues={initialValues}
