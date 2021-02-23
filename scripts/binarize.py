@@ -2,17 +2,9 @@ from PIL import Image
 import numpy
 import sys
 from skimage.filters import threshold_mean
-import io
 
 def binarize_array(numpy_array, threshold=200):
     """Binarize a numpy array."""
-    # for i in range(len(numpy_array)):
-    #     for j in range(len(numpy_array[0])):
-    #         if numpy_array[i][j] > threshold:
-    #             numpy_array[i][j] = 255
-    #         else:
-    #             numpy_array[i][j] = 0
-    # return numpy_array
     backgroundNum=numpy.where(numpy_array<threshold)
     foregroundNum=numpy.where(numpy_array>threshold)
     if len(foregroundNum[1])<len(backgroundNum[1]):

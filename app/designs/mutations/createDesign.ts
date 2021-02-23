@@ -2,6 +2,7 @@ import {Ctx} from 'blitz';
 import db from 'db';
 import fs from 'fs';
 import path from 'path';
+import {PassThrough} from 'stream';
 import {UPLOAD_DIR} from 'utils/config';
 import executeScript from 'utils/execute-python';
 
@@ -16,7 +17,12 @@ export default async function createDesign(
 ) {
 	ctx.session.$authorize();
 
-	// Await executeScript('binarize', fs.createReadStream(path.join(UPLOAD_DIR, designId)), fs.createWriteStream(path.join(UPLOAD_DIR, 'out.png')));
+	const binaryImageStream = new PassThrough();
+
+	await Promise.all([
+		executeScript('binarize', fs.createReadStream(path.join(UPLOAD_DIR, designId)), binaryImageStream),
+		executeScript('generate_stitches', binaryImageStream, fs.createWriteStream(path.join(UPLOAD_DIR, `${designId}.svg`)))
+	]);
 
 	const design = await db.design.create({
 		data: {
