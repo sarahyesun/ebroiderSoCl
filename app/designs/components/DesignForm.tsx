@@ -11,7 +11,7 @@ import ImageUploadPreview from 'app/components/image-upload-preview';
 type EditableFields = Except<
 Design,
 'createdAt' | 'updatedAt' | 'userId' | 'id' | 'isApproved' | 'price'
-> & {designId: string};
+> & {stitchFileId: string};
 
 type DesignFormProps = {
 	initialValues: Partial<EditableFields>;
@@ -38,9 +38,9 @@ const DesignForm = ({
 				// Upload design
 				const formData = new FormData();
 				formData.append('file', values.design[0]);
-				const {id} = await (await fetch('/api/upload', {body: formData, method: 'POST'})).json();
+				const {id} = await (await fetch('/api/uploads', {body: formData, method: 'POST'})).json();
 
-				await onSubmit({...values, designId: id});
+				await onSubmit({...values, stitchFileId: id});
 			}}
 			submitIcon={submitIcon}
 			schema={schema}

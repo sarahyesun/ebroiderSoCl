@@ -8,8 +8,10 @@ import {
 	BlitzPage,
 	useMutation
 } from 'blitz';
+import {Heading, Text, Grid, Container, Box, Spacer, Button, VStack, Wrap, WrapItem, HStack, IconButton} from '@chakra-ui/react';
 import getDesign from 'app/designs/queries/getDesign';
 import deleteDesign from 'app/designs/mutations/deleteDesign';
+import {EditIcon} from '@chakra-ui/icons';
 
 export const Design = () => {
 	const router = useRouter();
@@ -18,42 +20,51 @@ export const Design = () => {
 	const [deleteDesignMutation] = useMutation(deleteDesign);
 
 	return (
-		<div>
-			<h1>Design {design.id}</h1>
-			<pre>{JSON.stringify(design, null, 2)}</pre>
+		<Grid templateColumns="40% 1fr" gap={24}>
+			<img src={`/api/uploads/${design.stitchFileId}.svg`} width="100%"/>
 
-			<Link href={`/designs/${design.id}/edit`}>
-				<a>Edit</a>
-			</Link>
+			<VStack align="flex-start">
+				<HStack>
+					<Heading size="2xl" mb={2}>{design.name}</Heading>
 
-			<button
-				type="button"
-				onClick={async () => {
-					if (window.confirm('This will be deleted')) {
-						await deleteDesignMutation({where: {id: design.id}});
-						await router.push('/designs');
-					}
-				}}
-			>
-        Delete
-			</button>
-		</div>
+					<Spacer minWidth={6}/>
+
+					<Link href={`/designs/${design.id}/edit`} passHref>
+						<IconButton icon={<EditIcon/>} aria-label="edit design" as="a"/>
+					</Link>
+				</HStack>
+
+				<Heading size="md">$24.99</Heading>
+
+				<Spacer height={6} flexGrow={0}/>
+
+				<Text>
+					{design.description}
+				</Text>
+
+				<Spacer flexGrow={1}/>
+
+				<Wrap spacing={4}>
+					<WrapItem>
+						<Button colorScheme="blue">Add to cart</Button>
+					</WrapItem>
+
+					<WrapItem>
+						<Button>Download files</Button>
+					</WrapItem>
+				</Wrap>
+			</VStack>
+		</Grid>
 	);
 };
 
 const ShowDesignPage: BlitzPage = () => {
 	return (
-		<div>
-			<p>
-				<Link href="/designs">
-					<a>Designs</a>
-				</Link>
-			</p>
-
+		<Container size="lg" mt={24}>
 			<Suspense fallback={<div>Loading...</div>}>
 				<Design />
 			</Suspense>
-		</div>
+		</Container>
 	);
 };
 

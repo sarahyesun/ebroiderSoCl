@@ -11,8 +11,8 @@ export default async function createDesign(
 		name,
 		description,
 		isPublic,
-		designId
-	}: { name: string; description: string; isPublic: boolean; designId: string },
+		stitchFileId
+	}: { name: string; description: string; isPublic: boolean; stitchFileId: string },
 	ctx: Ctx
 ) {
 	ctx.session.$authorize();
@@ -20,8 +20,8 @@ export default async function createDesign(
 	const binaryImageStream = new PassThrough();
 
 	await Promise.all([
-		executeScript('binarize', fs.createReadStream(path.join(UPLOAD_DIR, designId)), binaryImageStream),
-		executeScript('generate_stitches', binaryImageStream, fs.createWriteStream(path.join(UPLOAD_DIR, `${designId}.svg`)))
+		executeScript('binarize', fs.createReadStream(path.join(UPLOAD_DIR, stitchFileId)), binaryImageStream),
+		executeScript('generate_stitches', binaryImageStream, fs.createWriteStream(path.join(UPLOAD_DIR, `${stitchFileId}.svg`)))
 	]);
 
 	const design = await db.design.create({
@@ -30,6 +30,7 @@ export default async function createDesign(
 			description,
 			isPublic,
 			price: 0,
+			stitchFileId,
 			user: {
 				connect: {
 					id: ctx.session.userId
