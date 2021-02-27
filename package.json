@@ -41,6 +41,8 @@
     "@fortawesome/react-fontawesome": "0.1.14",
     "@prisma/cli": "~2.14",
     "@prisma/client": "~2.14",
+    "@types/archiver": "5.1.0",
+    "archiver": "5.2.0",
     "blitz": "0.30.0",
     "execa": "5.0.0",
     "final-form": "4.20.1",

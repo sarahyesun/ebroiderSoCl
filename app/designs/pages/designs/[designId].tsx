@@ -50,7 +50,9 @@ export const Design = () => {
 					</WrapItem>
 
 					<WrapItem>
-						<Button>Download files</Button>
+						<Link href={`/api/designs/${design.id}/download`} passHref>
+							<Button as="a" download>Download files</Button>
+						</Link>
 					</WrapItem>
 				</Wrap>
 			</VStack>

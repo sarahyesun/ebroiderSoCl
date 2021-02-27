@@ -48,7 +48,7 @@ export const DesignsList = () => {
 	const goToNextPage = async () => router.push({query: {page: page + 1}});
 
 	return (
-		<VStack spacing={10}>
+		<VStack spacing={10} align="flex-start">
 			<Wrap spacing={10}>
 				{designs.map(design => (
 					<WrapItem key={design.id}>
@@ -56,6 +56,7 @@ export const DesignsList = () => {
 					</WrapItem>
 				))}
 			</Wrap>
+
 			<HStack width="100%">
 				{page !== 0 && (
 					<IconButton aria-label="Previous page" onClick={goToPreviousPage}>

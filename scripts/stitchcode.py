@@ -24,6 +24,7 @@
 # Boston, MA 02111-1307, USA.
 
 
+from io import BytesIO
 import math
 import sys
 from struct import unpack,pack
@@ -1073,14 +1074,7 @@ class Embroidery:
 	#### PNG
 	############################################
 
-
-	def save_as_png(self, filename, mark_stitch=False):
-		"""save design as PNG image
-
-		Args:
-			filename
-			mark_stitches: boolean (mark stitches with "X")
-		"""
+	def export_png(self, mark_stitch=False):
 		border = 5
 		stc = 2
 		stitch_color = (0, 0, 255, 0)
@@ -1137,7 +1131,22 @@ class Embroidery:
 				mark_point(last)
 
 			last = p
-		img.save(filename, "PNG")
+
+		res = BytesIO()
+		img.save(res, 'PNG')
+		return res
+
+	def save_as_png(self, filename, mark_stitch=False):
+		"""save design as PNG image
+
+		Args:
+			filename
+			mark_stitches: boolean (mark stitches with "X")
+		"""
+
+		with open(filename, "wb") as f:
+			f.write(self.export_png(mark_stitch=mark_stitch).getbuffer())
+
 		dbg.write("saving image to file: %s\n" % (filename))
 
 
@@ -1202,19 +1211,14 @@ class Embroidery:
 		f.close()
 		dbg.write("saving SVG to file: %s\n" % (filename))
 
-	def import_svg(self, filename):
+	def import_svg(self):
 		"""read a SVG file (for now just what we have written ourselves)
-
-		Args:
-			filename
 		"""
-		dbg.write("loading SVG: %s\n" % (filename))
-		dbg.write("Warning: SVG import is experimental!")
 
 		first = True
 		jump = False
 		from xml.dom import minidom
-		xmldoc = minidom.parse(filename)
+		xmldoc = minidom.parse(sys.stdin.buffer)
 		itemlist = xmldoc.getElementsByTagName('path')
 		for s in itemlist :
 			if not first:

@@ -8,6 +8,7 @@ node_modules
 web_modules/
 
 uploads
+!app/api/uploads
 
 # blitz
 /.blitz/

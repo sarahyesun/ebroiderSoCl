@@ -13,7 +13,7 @@ const DesignCard = ({design}: { design?: Design }) => {
 
 	return (
 		<LinkBox>
-			<Link href={'/designs/1'} passHref>
+			<Link href={`/designs/${design?.id ?? 0}`} passHref>
 				<LinkOverlay
 					display="flex"
 					flexDirection="column"
