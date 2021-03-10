@@ -1,6 +1,6 @@
 import React, {Suspense, useCallback, useState} from 'react';
 import {Flex, Heading, Box, Button, IconButton} from '@chakra-ui/react';
-import {useMutation, useRouter} from 'blitz';
+import {Link, useMutation, useRouter} from 'blitz';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 import WrappedLink from 'app/components/link';
@@ -103,11 +103,15 @@ const Navbar = () => {
 			bg="black"
 			color="white"
 			mb={10}
+			zIndex={10}
+			position="relative"
 		>
 			<Flex align="center" mr={5}>
-				<Heading as="h1" size="lg">
-          Wearable Electronics Factory
-				</Heading>
+				<Link passHref href="/">
+					<Heading as="a" size="lg">
+						Wearable Electronics Factory
+					</Heading>
+				</Link>
 			</Flex>
 
 			<Box display={{base: 'block', md: 'none'}} onClick={handleToggle}>

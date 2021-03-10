@@ -7,12 +7,13 @@ import {
 } from 'blitz';
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
 import {useQueryErrorResetBoundary} from 'react-query';
-import {ChakraProvider, extendTheme} from '@chakra-ui/react';
+import {ChakraProvider, extendTheme, Container, Heading, Alert, AlertIcon, AlertTitle} from '@chakra-ui/react';
 import LoginForm from 'app/auth/components/LoginForm';
 
 // Fix Font Awesome sizing
 import {config} from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import React from 'react';
 config.autoAddCss = false;
 
 const theme = extendTheme({
@@ -52,7 +53,15 @@ export default function App({Component, pageProps}: AppProps) {
 
 function RootErrorFallback({error, resetErrorBoundary}: FallbackProps) {
 	if (error instanceof AuthenticationError) {
-		return <LoginForm onSuccess={resetErrorBoundary} />;
+		return (
+			<Container>
+				<Alert status="error" mt={4} mb={4}>
+					<AlertIcon />
+					<AlertTitle mr={2}>You must be logged in to access this.</AlertTitle>
+				</Alert>
+				<LoginForm onSuccess={resetErrorBoundary} />
+			</Container>
+		);
 	}
 
 	if (error instanceof AuthorizationError) {
