@@ -8,6 +8,8 @@ import {PassThrough} from 'stream';
 import executeScript from 'utils/execute-python';
 
 const handleDownloadRequest = async (request: NextApiRequest, response: NextApiResponse) => {
+	// TODO: add auth
+
 	const {query: {id}} = request;
 
 	const design = await prisma.design.findUnique({where: {id: Number.parseInt(id as string, 10)}});

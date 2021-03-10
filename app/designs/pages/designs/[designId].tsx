@@ -2,26 +2,25 @@ import {Suspense} from 'react';
 import Layout from 'app/layouts/Layout';
 import {
 	Link,
-	useRouter,
 	useQuery,
 	useParam,
 	BlitzPage,
-	useMutation
+	useSession
 } from 'blitz';
 import {Heading, Text, Grid, Container, Box, Spacer, Button, VStack, Wrap, WrapItem, HStack, IconButton} from '@chakra-ui/react';
 import getDesign from 'app/designs/queries/getDesign';
-import deleteDesign from 'app/designs/mutations/deleteDesign';
 import {EditIcon} from '@chakra-ui/icons';
 
 export const Design = () => {
-	const router = useRouter();
 	const designId = useParam('designId', 'number');
 	const [design] = useQuery(getDesign, {where: {id: designId}});
-	const [deleteDesignMutation] = useMutation(deleteDesign);
+
+	const session = useSession();
+	const canEditDesign = session.roles?.includes('ADMIN') === true || design.userId === session.userId;
 
 	return (
 		<Grid templateColumns="40% 1fr" gap={24}>
-			<img src={`/api/uploads/${design.stitchFileId}.svg`} width="100%"/>
+			<img src={`/api/uploads/${design.stitchFileId}.svg?type=image%2Fsvg%2Bxml`} width="100%"/>
 
 			<VStack align="flex-start">
 				<HStack>
@@ -29,9 +28,14 @@ export const Design = () => {
 
 					<Spacer minWidth={6}/>
 
-					<Link href={`/designs/${design.id}/edit`} passHref>
-						<IconButton icon={<EditIcon/>} aria-label="edit design" as="a"/>
-					</Link>
+					{
+						canEditDesign && (
+							<Link href={`/designs/${design.id}/edit`} passHref>
+								<IconButton icon={<EditIcon/>} aria-label="edit design" as="a"/>
+							</Link>
+						)
+					}
+
 				</HStack>
 
 				<Heading size="md">$24.99</Heading>

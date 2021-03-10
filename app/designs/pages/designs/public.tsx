@@ -1,7 +1,7 @@
 import React, {Suspense} from 'react';
 import Layout from 'app/layouts/Layout';
 import {Link, usePaginatedQuery, useRouter, BlitzPage} from 'blitz';
-import getMyDesigns from 'app/designs/queries/getMyDesigns';
+import getPublicDesigns from 'app/designs/queries/getPublicDesigns';
 import {
 	Heading,
 	Box,
@@ -21,6 +21,7 @@ import {
 	faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import DesignCard from 'app/designs/components/design-card';
+import {useCurrentUser} from 'app/hooks/useCurrentUser';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -34,10 +35,10 @@ const DesignsListPlaceholder = () => (
 	</Wrap>
 );
 
-export const DesignsList: BlitzPage = () => {
+export const DesignsList = () => {
 	const router = useRouter();
 	const page = Number(router.query.page) || 0;
-	const [{designs, hasMore}] = usePaginatedQuery(getMyDesigns, {
+	const [{designs, hasMore}] = usePaginatedQuery(getPublicDesigns, {
 		orderBy: {id: 'asc'},
 		skip: ITEMS_PER_PAGE * page,
 		take: ITEMS_PER_PAGE
@@ -76,21 +77,35 @@ export const DesignsList: BlitzPage = () => {
 	);
 };
 
+const NewDesignButton = () => {
+	const user = useCurrentUser();
+
+	if (user) {
+		return (
+			<Link href="/designs/new" passHref>
+				<Button
+					leftIcon={<FontAwesomeIcon icon={faPlus} />}
+					colorScheme="blue"
+					as="a"
+				>
+            New Design
+				</Button>
+			</Link>
+		);
+	}
+
+	return null;
+};
+
 const DesignsPage: BlitzPage = () => {
 	return (
 		<Container size="lg">
 			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>My Designs</Heading>
+				<Heading>Public Designs</Heading>
 
-				<Link href="/designs/new" passHref>
-					<Button
-						leftIcon={<FontAwesomeIcon icon={faPlus} />}
-						colorScheme="blue"
-						as="a"
-					>
-            New Design
-					</Button>
-				</Link>
+				<Suspense fallback={<div/>}>
+					<NewDesignButton/>
+				</Suspense>
 			</Box>
 
 			<Suspense fallback={<DesignsListPlaceholder />}>
@@ -100,7 +115,6 @@ const DesignsPage: BlitzPage = () => {
 	);
 };
 
-DesignsPage.getLayout = page => <Layout title={'Designs'}>{page}</Layout>;
-DesignsPage.authenticate = true;
+DesignsPage.getLayout = page => <Layout title={'Public Designs'}>{page}</Layout>;
 
 export default DesignsPage;

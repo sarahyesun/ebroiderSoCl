@@ -3,17 +3,15 @@ import db, {Prisma} from 'db';
 
 type GetDesignsInput = Pick<
 Prisma.FindManyDesignArgs,
-'where' | 'orderBy' | 'skip' | 'take'
+'orderBy' | 'skip' | 'take'
 >;
 
-export default async function getDesigns(
-	{where, orderBy, skip = 0, take}: GetDesignsInput,
-	ctx: Ctx
-) {
-	ctx.session.$authorize('ADMIN');
-
+export default async function getDesigns({orderBy, skip = 0, take}: GetDesignsInput) {
 	const designs = await db.design.findMany({
-		where,
+		where: {
+			isPublic: true,
+			isApproved: true
+		},
 		orderBy,
 		take,
 		skip

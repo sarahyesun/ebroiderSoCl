@@ -1,6 +1,6 @@
 import React, {Suspense, useCallback, useState} from 'react';
 import {Flex, Heading, Box, Button, IconButton} from '@chakra-ui/react';
-import {useMutation} from 'blitz';
+import {useMutation, useRouter} from 'blitz';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 import WrappedLink from 'app/components/link';
@@ -75,9 +75,11 @@ const LoginButtons = ({
 const LoginButtonsWrapper = () => {
 	const currentUser = useCurrentUser();
 	const [logoutMutation] = useMutation(logout);
+	const router = useRouter();
 
 	const handleLogout = useCallback(async () => {
 		await logoutMutation();
+		await router.push('/');
 	}, [logoutMutation]);
 
 	return (
@@ -126,7 +128,7 @@ const Navbar = () => {
 				alignItems="center"
 				flexGrow={1}
 			>
-				<WrappedLink href="/designs">Public Designs</WrappedLink>
+				<WrappedLink href="/designs/public">Public Designs</WrappedLink>
 			</Box>
 
 			<Box

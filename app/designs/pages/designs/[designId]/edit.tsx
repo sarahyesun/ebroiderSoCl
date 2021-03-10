@@ -69,5 +69,6 @@ const EditDesignPage: BlitzPage = () => {
 EditDesignPage.getLayout = page => (
 	<Layout title={'Edit Design'}>{page}</Layout>
 );
+EditDesignPage.authenticate = true;
 
 export default EditDesignPage;

@@ -30,5 +30,6 @@ const NewDesignPage: BlitzPage = () => {
 NewDesignPage.getLayout = page => (
 	<Layout title={'Create New Design'}>{page}</Layout>
 );
+NewDesignPage.authenticate = true;
 
 export default NewDesignPage;
