@@ -1,6 +1,6 @@
 import React from 'react';
 import {useField} from 'react-final-form';
-import {Button, Box} from '@chakra-ui/react';
+import {Button, Box, FormErrorMessage, FormControl} from '@chakra-ui/react';
 import {ArrowUpIcon} from '@chakra-ui/icons';
 
 type ImageUploadFieldProps = {
@@ -21,11 +21,16 @@ const cloneFileList = (list: FileList) => {
 
 const ImageUploadField = (props: ImageUploadFieldProps) => {
 	const {
-		input: {value, onChange, ...input}
+		input: {value, onChange, ...input},
+		meta: {error, submitError, touched}
 	} = useField(props.name);
 
+	const normalizedError = error ?
+		error.join(', ') :
+		error || submitError;
+
 	return (
-		<Box mb={6}>
+		<FormControl mb={6} isInvalid={normalizedError && touched}>
 			<input
 				{...input}
 				onChange={({target}) => {
@@ -45,7 +50,9 @@ const ImageUploadField = (props: ImageUploadFieldProps) => {
 			>
 				{props.label}
 			</Button>
-		</Box>
+
+			<FormErrorMessage>{normalizedError}</FormErrorMessage>
+		</FormControl>
 	);
 };
 

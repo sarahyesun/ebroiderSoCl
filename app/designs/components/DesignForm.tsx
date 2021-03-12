@@ -26,7 +26,7 @@ type DesignFormProps = {
 const schema = z.object({
 	name: z.string(),
 	description: z.string(),
-	design: z.any(),
+	design: z.array(z.instanceof(typeof window === 'undefined' ? Object : File)),
 	isPublic: z.boolean()
 });
 
@@ -46,7 +46,7 @@ const DesignForm = ({
 				// Upload design
 				if (design) {
 					const formData = new FormData();
-					formData.append('file', design[0]);
+					formData.append('file', design[0] as File);
 					const {id} = await (await fetch('/api/uploads', {body: formData, method: 'POST'})).json();
 					(valuesToSubmit as EditableFields).stitchFileId = id;
 				}
