@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import React, {Suspense} from 'react';
 import Layout from 'app/layouts/Layout';
 import {
 	Link,
@@ -11,6 +11,7 @@ import {
 import getDesign from 'app/designs/queries/getDesign';
 import updateDesign from 'app/designs/mutations/updateDesign';
 import DesignForm from 'app/designs/components/DesignForm';
+import {Container, Heading} from '@chakra-ui/react';
 
 export const EditDesign = () => {
 	const router = useRouter();
@@ -21,48 +22,36 @@ export const EditDesign = () => {
 	const [updateDesignMutation] = useMutation(updateDesign);
 
 	return (
-		<div>
-			<h1>Edit Design {design.id}</h1>
-			<pre>{JSON.stringify(design)}</pre>
+		<DesignForm
+			initialValues={{
+				name: design.name,
+				description: design.description,
+				isPublic: design.isPublic,
+				stitchFileId: design.stitchFileId
+			}}
+			onSubmit={async data => {
+				const updated = await updateDesignMutation({
+					where: {id: design.id},
+					data
+				});
+				await setQueryData(updated);
 
-			<DesignForm
-				initialValues={{
-					name: design.name,
-					description: design.description,
-					isPublic: design.isPublic
-				}}
-				onSubmit={async data => {
-					try {
-						const updated = await updateDesignMutation({
-							where: {id: design.id},
-							data
-						});
-						await setQueryData(updated);
-						alert('Success!' + JSON.stringify(updated));
-						await router.push(`/designs/${updated.id}`);
-					} catch (error: unknown) {
-						console.log(error);
-						alert('Error editing design ' + JSON.stringify(error, null, 2));
-					}
-				}}
-			/>
-		</div>
+				await router.push(`/designs/${updated.id}`);
+			}}
+			submitText="Edit Design"
+		/>
 	);
 };
 
 const EditDesignPage: BlitzPage = () => {
 	return (
-		<div>
-			<Suspense fallback={<div>Loading...</div>}>
-				<EditDesign />
-			</Suspense>
+		<Container size="lg">
+			<Heading mb={6}>Edit Design</Heading>
 
-			<p>
-				<Link href="/designs">
-					<a>Designs</a>
-				</Link>
-			</p>
-		</div>
+			<Suspense fallback={<div/>}>
+				<EditDesign/>
+			</Suspense>
+		</Container>
 	);
 };
 

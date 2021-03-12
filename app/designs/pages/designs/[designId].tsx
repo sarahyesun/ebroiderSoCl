@@ -10,6 +10,7 @@ import {
 import {Heading, Text, Grid, Container, Box, Spacer, Button, VStack, Wrap, WrapItem, HStack, IconButton} from '@chakra-ui/react';
 import getDesign from 'app/designs/queries/getDesign';
 import {EditIcon} from '@chakra-ui/icons';
+import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
 export const Design = () => {
 	const designId = useParam('designId', 'number');
@@ -20,7 +21,7 @@ export const Design = () => {
 
 	return (
 		<Grid templateColumns="40% 1fr" gap={24}>
-			<img src={`/api/uploads/${design.stitchFileId}.svg?type=image%2Fsvg%2Bxml`} width="100%"/>
+			<img src={getUploadPreviewUrl(design.stitchFileId, 'svg')} width="100%"/>
 
 			<VStack align="flex-start">
 				<HStack>

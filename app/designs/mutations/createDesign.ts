@@ -5,6 +5,7 @@ import path from 'path';
 import {PassThrough} from 'stream';
 import {UPLOAD_DIR} from 'utils/config';
 import executeScript from 'utils/execute-python';
+import processImageUpload from 'utils/process-image-upload';
 
 export default async function createDesign(
 	{
@@ -17,12 +18,7 @@ export default async function createDesign(
 ) {
 	ctx.session.$authorize();
 
-	const binaryImageStream = new PassThrough();
-
-	await Promise.all([
-		executeScript('binarize', fs.createReadStream(path.join(UPLOAD_DIR, stitchFileId)), binaryImageStream),
-		executeScript('generate_stitches', binaryImageStream, fs.createWriteStream(path.join(UPLOAD_DIR, `${stitchFileId}.svg`)))
-	]);
+	await processImageUpload(stitchFileId);
 
 	const design = await db.design.create({
 		data: {

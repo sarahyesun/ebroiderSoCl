@@ -2,21 +2,23 @@ import React, {useCallback} from 'react';
 import * as z from 'zod';
 import {Design} from '@prisma/client';
 import {Grid, Box} from '@chakra-ui/react';
-import {Except} from 'type-fest';
+import {Except, SetOptional} from 'type-fest';
 import Form from 'app/components/Form';
 import TextField from 'app/components/LabeledTextField';
 import ImageUploadField from 'app/components/image-upload-field';
 import ImageUploadPreview from 'app/components/image-upload-preview';
+import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
-type EditableFields = Except<
+type EditableFields = SetOptional<Except<
 Design,
 'createdAt' | 'updatedAt' | 'userId' | 'id' | 'isApproved' | 'price'
-> & {stitchFileId: string};
+>, 'stitchFileId'>;
 
 type DesignFormProps = {
 	initialValues: Partial<EditableFields>;
 	onSubmit: (values: EditableFields) => Record<string, unknown> | Promise<void>;
 	submitIcon?: React.ReactElement;
+	submitText?: string;
 };
 
 const schema = z.object({
@@ -29,18 +31,24 @@ const schema = z.object({
 const DesignForm = ({
 	initialValues,
 	onSubmit,
-	submitIcon
+	submitIcon,
+	submitText = 'Create Design'
 }: DesignFormProps) => {
 	return (
 		<Form
-			submitText="Create Design"
+			submitText={submitText}
 			onSubmit={async values => {
-				// Upload design
-				const formData = new FormData();
-				formData.append('file', values.design[0]);
-				const {id} = await (await fetch('/api/uploads', {body: formData, method: 'POST'})).json();
+				const {design, ...valuesToSubmit} = values;
 
-				await onSubmit({...values, stitchFileId: id});
+				// Upload design
+				if (design) {
+					const formData = new FormData();
+					formData.append('file', design[0]);
+					const {id} = await (await fetch('/api/uploads', {body: formData, method: 'POST'})).json();
+					(valuesToSubmit as EditableFields).stitchFileId = id;
+				}
+
+				await onSubmit(valuesToSubmit);
 			}}
 			submitIcon={submitIcon}
 			schema={schema}
@@ -73,7 +81,7 @@ const DesignForm = ({
 						{submitButton}
 					</Box>
 
-					<ImageUploadPreview name="design" mb={6} />
+					<ImageUploadPreview name="design" mb={6} initialUrl={initialValues.stitchFileId ? getUploadPreviewUrl(initialValues.stitchFileId, 'svg') : undefined}/>
 				</Grid>
 			)}
 		</Form>

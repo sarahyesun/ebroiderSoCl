@@ -3,8 +3,9 @@ import {FormSpy} from 'react-final-form';
 
 const ImageUploadPreview = ({
 	name,
+	initialUrl,
 	...boxProps
-}: { name: string } & BoxProps) => (
+}: { name: string; initialUrl?: string } & BoxProps) => (
 	<Box
 		display="inline-block"
 		height="100%"
@@ -16,10 +17,18 @@ const ImageUploadPreview = ({
 			{props => {
 				const files = props.values[name];
 
+				let src: string | null = null;
+
 				if (files && files.length > 0) {
+					src = URL.createObjectURL(files[0]);
+				} else if (initialUrl) {
+					src = initialUrl;
+				}
+
+				if (src) {
 					return (
 						<img
-							src={URL.createObjectURL(files[0])}
+							src={src}
 							style={{display: 'block', width: '100%'}}
 							alt="Design preview"
 						/>
