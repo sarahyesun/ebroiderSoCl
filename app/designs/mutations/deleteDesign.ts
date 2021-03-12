@@ -9,7 +9,17 @@ export default async function deleteDesign(
 ) {
 	ctx.session.$authorize();
 
-	const design = await db.design.delete({where});
+	const design = await db.design.findUnique({where: {id: where.id}});
+
+	if (!design) {
+		throw new Error('Design not found');
+	}
+
+	if (design.userId !== ctx.session.userId && !ctx.session.roles.includes('ADMIN')) {
+		throw new Error('Unauthorized');
+	}
+
+	await db.design.delete({where});
 
 	return design;
 }

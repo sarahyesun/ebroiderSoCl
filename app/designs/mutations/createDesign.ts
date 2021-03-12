@@ -1,10 +1,5 @@
 import {Ctx} from 'blitz';
 import db from 'db';
-import fs from 'fs';
-import path from 'path';
-import {PassThrough} from 'stream';
-import {UPLOAD_DIR} from 'utils/config';
-import executeScript from 'utils/execute-python';
 import processImageUpload from 'utils/process-image-upload';
 
 export default async function createDesign(
