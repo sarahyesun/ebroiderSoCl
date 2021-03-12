@@ -21,6 +21,7 @@ import {
 	faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import DesignCard from 'app/designs/components/design-card';
+import {Design} from 'db';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -33,6 +34,20 @@ const DesignsListPlaceholder = () => (
 		))}
 	</Wrap>
 );
+
+const getTags = (design: Design) => {
+	const tags: string[] = [];
+
+	if (design.isPublic) {
+		if (design.isApproved) {
+			tags.push('Public');
+		} else {
+			tags.push('Pending Approval');
+		}
+	}
+
+	return tags;
+};
 
 export const DesignsList: BlitzPage = () => {
 	const router = useRouter();
@@ -52,7 +67,7 @@ export const DesignsList: BlitzPage = () => {
 			<Wrap spacing={10}>
 				{designs.map(design => (
 					<WrapItem key={design.id}>
-						<DesignCard design={design} />
+						<DesignCard design={design} tags={getTags(design)}/>
 					</WrapItem>
 				))}
 			</Wrap>

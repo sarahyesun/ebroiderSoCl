@@ -1,4 +1,4 @@
-import {LinkBox, LinkOverlay, Box, Text, Skeleton} from '@chakra-ui/react';
+import {LinkBox, LinkOverlay, Box, Text, Skeleton, Tag, Wrap, WrapItem} from '@chakra-ui/react';
 import {Design} from '@prisma/client';
 import Image from 'next/image';
 import {Link} from 'blitz';
@@ -8,7 +8,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 	currency: 'USD'
 });
 
-const DesignCard = ({design}: { design?: Design }) => {
+const DesignCard = ({design, tags = []}: { design?: Design; tags?: string[] }) => {
 	const loaded = design !== undefined;
 
 	return (
@@ -34,6 +34,16 @@ const DesignCard = ({design}: { design?: Design }) => {
 							layout="fill"
 							objectFit="cover"
 						/>
+
+						<Wrap position="absolute" m={2}>
+							{
+								tags.map(tag => (
+									<WrapItem key={tag}>
+										<Tag>{tag}</Tag>
+									</WrapItem>
+								))
+							}
+						</Wrap>
 					</Skeleton>
 
 					<Box

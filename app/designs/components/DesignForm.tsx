@@ -30,6 +30,8 @@ const schema = z.object({
 	isPublic: z.boolean()
 });
 
+const schemaWithoutImage = schema.extend({design: z.undefined()});
+
 const DesignForm = ({
 	initialValues,
 	onSubmit,
@@ -44,7 +46,7 @@ const DesignForm = ({
 				const {design, ...valuesToSubmit} = values;
 
 				// Upload design
-				if (design) {
+				if (design && design.length > 0) {
 					const formData = new FormData();
 					formData.append('file', design[0] as File);
 					const {id} = await (await fetch('/api/uploads', {body: formData, method: 'POST'})).json();
@@ -54,7 +56,7 @@ const DesignForm = ({
 				await onSubmit(valuesToSubmit);
 			}}
 			submitIcon={submitIcon}
-			schema={schema}
+			schema={initialValues.stitchFileId ? schemaWithoutImage : schema}
 			initialValues={initialValues}
 		>
 			{({submitButton}) => (
