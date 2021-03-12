@@ -8,10 +8,11 @@ import {
 	useParam,
 	BlitzPage
 } from 'blitz';
+import {Container, Heading} from '@chakra-ui/react';
 import getDesign from 'app/designs/queries/getDesign';
 import updateDesign from 'app/designs/mutations/updateDesign';
 import DesignForm from 'app/designs/components/DesignForm';
-import {Container, Heading} from '@chakra-ui/react';
+import deleteDesign from 'app/designs/mutations/deleteDesign';
 
 export const EditDesign = () => {
 	const router = useRouter();
@@ -20,6 +21,7 @@ export const EditDesign = () => {
 		where: {id: designId}
 	});
 	const [updateDesignMutation] = useMutation(updateDesign);
+	const [deleteDesignMutation] = useMutation(deleteDesign);
 
 	return (
 		<DesignForm
@@ -39,6 +41,15 @@ export const EditDesign = () => {
 				await router.push(`/designs/${updated.id}`);
 			}}
 			submitText="Edit Design"
+			onDelete={async () => {
+				await deleteDesignMutation({
+					where: {
+						id: design.id
+					}
+				});
+
+				await router.push('/designs');
+			}}
 		/>
 	);
 };

@@ -1,7 +1,8 @@
 import React, {useCallback} from 'react';
 import * as z from 'zod';
 import {Design} from '@prisma/client';
-import {Grid, Box} from '@chakra-ui/react';
+import {Grid, Box, HStack, Spacer, Button} from '@chakra-ui/react';
+import {DeleteIcon} from '@chakra-ui/icons';
 import {Except, SetOptional} from 'type-fest';
 import Form from 'app/components/Form';
 import TextField from 'app/components/LabeledTextField';
@@ -17,6 +18,7 @@ Design,
 type DesignFormProps = {
 	initialValues: Partial<EditableFields>;
 	onSubmit: (values: EditableFields) => Record<string, unknown> | Promise<void>;
+	onDelete?: () => Promise<void>;
 	submitIcon?: React.ReactElement;
 	submitText?: string;
 };
@@ -31,6 +33,7 @@ const schema = z.object({
 const DesignForm = ({
 	initialValues,
 	onSubmit,
+	onDelete,
 	submitIcon,
 	submitText = 'Create Design'
 }: DesignFormProps) => {
@@ -78,7 +81,15 @@ const DesignForm = ({
 
 						<TextField name="isPublic" label="Make public" type="checkbox" />
 
-						{submitButton}
+						<HStack>
+							{submitButton}
+
+							<Spacer/>
+
+							{onDelete && (
+								<Button colorScheme="red" leftIcon={<DeleteIcon/>} onClick={onDelete}>Delete</Button>
+							)}
+						</HStack>
 					</Box>
 
 					<ImageUploadPreview name="design" mb={6} initialUrl={initialValues.stitchFileId ? getUploadPreviewUrl(initialValues.stitchFileId, 'svg') : undefined}/>
