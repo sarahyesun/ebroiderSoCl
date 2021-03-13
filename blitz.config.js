@@ -18,6 +18,6 @@ module.exports = {
   },
   */
 	images: {
-		domains: ['source.unsplash.com']
+		domains: ['source.unsplash.com', 'images.unsplash.com']
 	}
 };

@@ -7,7 +7,7 @@ const Home: BlitzPage = () => {
 	return (
 		<Box minH="calc(100vh - 5rem)" bg="black" mt={-10} color="white" display="flex" justifyContent="center" alignItems="center">
 			<Box opacity={0.5}>
-				<Image src="https://source.unsplash.com/random" layout="fill" objectFit="cover"/>
+				<Image src="https://images.unsplash.com/photo-1507220529008-e931df30d1ed" layout="fill" objectFit="cover"/>
 			</Box>
 
 			<Container>
