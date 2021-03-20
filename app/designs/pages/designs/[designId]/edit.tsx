@@ -29,6 +29,7 @@ export const EditDesign = () => {
 				name: design.name,
 				description: design.description,
 				isPublic: design.isPublic,
+				isApproved: design.isApproved,
 				stitchFileId: design.stitchFileId
 			}}
 			onSubmit={async data => {
@@ -38,7 +39,7 @@ export const EditDesign = () => {
 				});
 				await setQueryData(updated);
 
-				await router.push(`/designs/${updated.id}`);
+				await router.push(router.query.redirect ? router.query.redirect.toString() : `/designs/${updated.id}`);
 			}}
 			submitText="Edit Design"
 			onDelete={async () => {

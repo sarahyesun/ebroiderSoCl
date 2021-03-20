@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {Suspense, useCallback} from 'react';
 import * as z from 'zod';
 import {Design} from '@prisma/client';
 import {Grid, Box, HStack, Spacer, Button} from '@chakra-ui/react';
@@ -9,10 +9,11 @@ import TextField from 'app/components/LabeledTextField';
 import ImageUploadField from 'app/components/image-upload-field';
 import ImageUploadPreview from 'app/components/image-upload-preview';
 import getUploadPreviewUrl from 'utils/get-upload-preview-url';
+import {useCurrentUser} from 'app/hooks/useCurrentUser';
 
 type EditableFields = SetOptional<Except<
 Design,
-'createdAt' | 'updatedAt' | 'userId' | 'id' | 'isApproved' | 'price'
+'createdAt' | 'updatedAt' | 'userId' | 'id' | 'price'
 >, 'stitchFileId'>;
 
 type DesignFormProps = {
@@ -27,10 +28,25 @@ const schema = z.object({
 	name: z.string(),
 	description: z.string(),
 	design: z.array(z.instanceof(typeof window === 'undefined' ? Object : File)),
-	isPublic: z.boolean()
+	isPublic: z.boolean(),
+	isApproved: z.boolean()
 });
 
 const schemaWithoutImage = schema.extend({design: z.undefined()});
+
+const AdminFields = () => {
+	const user = useCurrentUser();
+
+	if (user?.role === 'ADMIN') {
+		return (
+			<>
+				<TextField name="isApproved" label="Approved" type="checkbox"/>
+			</>
+		);
+	}
+
+	return null;
+};
 
 const DesignForm = ({
 	initialValues,
@@ -59,7 +75,7 @@ const DesignForm = ({
 			schema={initialValues.stitchFileId ? schemaWithoutImage : schema}
 			initialValues={initialValues}
 		>
-			{({submitButton}) => (
+			{({submitButton, submitting}) => (
 				<Grid
 					templateColumns={{md: '1fr min(20vw, 20rem)'}}
 					templateRows="1fr 1fr"
@@ -83,13 +99,17 @@ const DesignForm = ({
 
 						<TextField name="isPublic" label="Make public" type="checkbox" />
 
+						<Suspense fallback={<div/>}>
+							<AdminFields/>
+						</Suspense>
+
 						<HStack>
 							{submitButton}
 
 							<Spacer/>
 
 							{onDelete && (
-								<Button colorScheme="red" leftIcon={<DeleteIcon/>} onClick={onDelete}>Delete</Button>
+								<Button colorScheme="red" leftIcon={<DeleteIcon/>} onClick={onDelete} disabled={submitting}>Delete</Button>
 							)}
 						</HStack>
 					</Box>

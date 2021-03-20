@@ -10,6 +10,7 @@ import {Except} from 'type-fest';
 
 type ChildWithRenderMethod = (options: {
 	submitButton: React.ReactNode;
+	submitting?: boolean;
 }) => React.ReactNode;
 
 const hasRenderMethod = (children: any): children is ChildWithRenderMethod =>
@@ -71,7 +72,8 @@ export function Form<S extends z.ZodType<any, any>>({
 								>
 									{submitText}
 								</Button>
-							)
+							),
+							submitting
 						}) :
 						children}
 

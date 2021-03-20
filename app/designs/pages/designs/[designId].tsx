@@ -12,6 +12,8 @@ import getDesign from 'app/designs/queries/getDesign';
 import {EditIcon} from '@chakra-ui/icons';
 import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
+const currencyFormat = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
+
 export const Design = () => {
 	const designId = useParam('designId', 'number');
 	const [design] = useQuery(getDesign, {where: {id: designId}});
@@ -39,7 +41,7 @@ export const Design = () => {
 
 				</HStack>
 
-				<Heading size="md">$24.99</Heading>
+				<Heading size="md">{currencyFormat.format(design.price)}</Heading>
 
 				<Spacer height={6} flexGrow={0}/>
 

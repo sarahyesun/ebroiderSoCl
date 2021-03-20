@@ -1,4 +1,4 @@
-import React, {Suspense, useCallback, useState} from 'react';
+import React, {Suspense, useCallback, useMemo, useState} from 'react';
 import {Flex, Heading, Box, Button, IconButton} from '@chakra-ui/react';
 import {Link, useMutation, useRouter} from 'blitz';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -28,6 +28,13 @@ const AuthenticatedLinks = ({show}: { show: boolean }) => {
 			label: 'My Orders'
 		}
 	];
+
+	if (currentUser.role === 'ADMIN') {
+		links.push({
+			href: '/admin',
+			label: 'Admin'
+		});
+	}
 
 	return (
 		<>

@@ -50,6 +50,7 @@ LabeledTextFieldProps
 					{...propsWithoutValue}
 					defaultChecked={input.checked}
 					ref={ref as React.ForwardedRef<HTMLInputElement>}
+					isDisabled={submitting}
 				>
 					{label}
 				</Checkbox>

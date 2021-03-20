@@ -22,7 +22,7 @@ const cloneFileList = (list: FileList) => {
 const ImageUploadField = (props: ImageUploadFieldProps) => {
 	const {
 		input: {value, onChange, ...input},
-		meta: {error, submitError, touched}
+		meta: {error, submitError, touched, submitting}
 	} = useField(props.name);
 
 	const normalizedError = error ?
@@ -47,6 +47,7 @@ const ImageUploadField = (props: ImageUploadFieldProps) => {
 				htmlFor={props.name}
 				as="label"
 				_hover={{cursor: 'pointer'}}
+				disabled={submitting}
 			>
 				{props.label}
 			</Button>
