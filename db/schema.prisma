@@ -18,7 +18,7 @@ enum Role {
 }
 
 model User {
-  id             Int       @default(autoincrement()) @id
+  id             Int       @id @default(autoincrement())
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   name           String?
@@ -26,10 +26,11 @@ model User {
   hashedPassword String?
   role           Role
   sessions       Session[]
+  Design         Design[]
 }
 
 model Session {
-  id                 Int       @default(autoincrement()) @id
+  id                 Int       @id @default(autoincrement())
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -43,15 +44,15 @@ model Session {
 }
 
 model Design {
-  id          Int      @default(autoincrement()) @id
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  description String
-  isPublic    Boolean
-  isApproved  Boolean  @default(false)
-  price       Int
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  description  String
+  isPublic     Boolean
+  isApproved   Boolean  @default(false)
+  price        Int
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
   stitchFileId String
 }

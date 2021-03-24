@@ -1,7 +1,5 @@
-import {DefaultCtx, SessionContext} from 'blitz';
-import {SimpleRolesIsAuthorized} from '@blitzjs/server';
-import {User} from 'db';
-import {Role} from '@prisma/client';
+import {DefaultCtx, SessionContext, SimpleRolesIsAuthorized} from 'blitz';
+import {User, Role} from 'db';
 
 export {Role};
 

@@ -2,7 +2,7 @@ import {Ctx} from 'blitz';
 import db, {Prisma} from 'db';
 
 type GetDesignsInput = Pick<
-Prisma.FindManyDesignArgs,
+Prisma.DesignFindManyArgs,
 'where' | 'orderBy' | 'skip' | 'take'
 >;
 

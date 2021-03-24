@@ -1,7 +1,6 @@
 import {Ctx, SecurePassword} from 'blitz';
-import db from 'db';
 import {SignupInput, SignupInputType} from 'app/auth/validations';
-import {PrismaClientKnownRequestError, Role} from '@prisma/client';
+import db, {Role, Prisma} from 'db';
 
 export default async function signup(input: SignupInputType, {session}: Ctx) {
 	// This throws an error if input is invalid
@@ -19,7 +18,7 @@ export default async function signup(input: SignupInputType, {session}: Ctx) {
 		return user;
 	} catch (error: unknown) {
 		if (
-			error instanceof PrismaClientKnownRequestError &&
+			error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002' &&
       (error.meta as any)?.target?.includes('email')
 		) {

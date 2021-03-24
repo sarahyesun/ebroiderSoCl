@@ -1,10 +1,10 @@
 import {Ctx, NotFoundError} from 'blitz';
 import db, {Prisma} from 'db';
 
-type GetDesignInput = Pick<Prisma.FindFirstDesignArgs, 'where'>;
+type GetDesignInput = Pick<Prisma.DesignFindFirstArgs, 'where'>;
 
 export default async function getDesign({where}: GetDesignInput, ctx: Ctx) {
-	let protectedWhere: Prisma.FindFirstDesignArgs['where'];
+	let protectedWhere: Prisma.DesignFindFirstArgs['where'];
 
 	if (ctx.session.roles) {
 		protectedWhere = ctx.session.roles.includes('ADMIN') ? where : {
