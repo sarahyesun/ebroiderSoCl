@@ -3,11 +3,7 @@ const {
 	simpleRolesIsAuthorized
 } = require('blitz');
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-	enabled: process.env.ANALYZE === 'true'
-});
-
-module.exports = withBundleAnalyzer({
+module.exports = {
 	middleware: [
 		sessionMiddleware({
 			isAuthorized: simpleRolesIsAuthorized
@@ -25,4 +21,4 @@ module.exports = withBundleAnalyzer({
 	images: {
 		domains: ['source.unsplash.com', 'images.unsplash.com']
 	}
-});
+};
