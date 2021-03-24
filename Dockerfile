@@ -4,7 +4,7 @@ WORKDIR /usr/app
 
 COPY package.json ./
 COPY yarn.lock ./
-COPY prisma .
+COPY db .
 
 # Install prod dependencies
 RUN yarn install --prod --frozen-lockfile
