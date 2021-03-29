@@ -4,6 +4,8 @@ RUN apk --no-cache add python3
 
 WORKDIR /usr/app
 
+RUN mkdir /data
+
 RUN apk --no-cache add --virtual build-dependencies libtool autoconf automake build-base git jq
 
 COPY package.json ./
@@ -23,6 +25,7 @@ COPY . .
 RUN yarn build
 
 ENV NODE_ENV=production
+ENV UPLOAD_DIR=/data
 
 EXPOSE 3000
 
