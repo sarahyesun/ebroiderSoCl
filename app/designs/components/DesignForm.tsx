@@ -29,7 +29,7 @@ const schema = z.object({
 	description: z.string(),
 	design: z.array(z.instanceof(typeof window === 'undefined' ? Object : File)),
 	isPublic: z.boolean(),
-	isApproved: z.boolean()
+	isApproved: z.boolean().optional()
 });
 
 const schemaWithoutImage = schema.extend({design: z.undefined()});
@@ -69,7 +69,7 @@ const DesignForm = ({
 					(valuesToSubmit as EditableFields).stitchFileId = id;
 				}
 
-				await onSubmit(valuesToSubmit);
+				await onSubmit({isApproved: valuesToSubmit.isApproved ?? false, ...valuesToSubmit});
 			}}
 			submitIcon={submitIcon}
 			schema={initialValues.stitchFileId ? schemaWithoutImage : schema}

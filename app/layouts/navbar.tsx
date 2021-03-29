@@ -1,16 +1,15 @@
-import React, {Suspense, useCallback, useMemo, useState} from 'react';
+import React, {Suspense, useCallback, useState} from 'react';
 import {Flex, Heading, Box, Button, IconButton} from '@chakra-ui/react';
-import {Link, useMutation, useRouter} from 'blitz';
+import {Link, useMutation, useRouter, useSession} from 'blitz';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 import WrappedLink from 'app/components/link';
-import {useCurrentUser} from 'app/hooks/useCurrentUser';
 import logout from 'app/auth/mutations/logout';
 
 const AuthenticatedLinks = ({show}: { show: boolean }) => {
-	const currentUser = useCurrentUser();
+	const {userId, roles} = useSession();
 
-	if (!currentUser) {
+	if (!userId) {
 		return null;
 	}
 
@@ -29,7 +28,7 @@ const AuthenticatedLinks = ({show}: { show: boolean }) => {
 		}
 	];
 
-	if (currentUser.role === 'ADMIN') {
+	if (roles?.includes('ADMIN')) {
 		links.push({
 			href: '/admin',
 			label: 'Admin'
@@ -80,7 +79,7 @@ const LoginButtons = ({
 };
 
 const LoginButtonsWrapper = () => {
-	const currentUser = useCurrentUser();
+	const {userId, isLoading} = useSession();
 	const [logoutMutation] = useMutation(logout);
 	const router = useRouter();
 
@@ -90,7 +89,7 @@ const LoginButtonsWrapper = () => {
 	}, [logoutMutation]);
 
 	return (
-		<LoginButtons onLogout={handleLogout} loggedIn={Boolean(currentUser)} />
+		<LoginButtons onLogout={handleLogout} loggedIn={Boolean(userId)} />
 	);
 };
 
