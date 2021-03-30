@@ -1,12 +1,13 @@
-FROM node:15-alpine AS base
+FROM node:15 AS base
 
-RUN apk --no-cache add python3
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
 
 WORKDIR /usr/app
 
 RUN mkdir /data
 
-RUN apk --no-cache add --virtual build-dependencies libtool autoconf automake build-base git jq python3-dev openblas-dev lapack-dev
+RUN pip3 install cython
 
 COPY scripts/requirements.txt scripts/requirements.txt
 RUN pip3 install -r scripts/requirements.txt
@@ -17,7 +18,6 @@ COPY yarn.lock ./
 # Install dependencies
 RUN yarn install --frozen-lockfile
 # Clean
-RUN apk del build-dependencies
 RUN yarn cache clean
 
 # Generate Prisma package
