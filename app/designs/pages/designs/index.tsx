@@ -12,7 +12,8 @@ import {
 	VStack,
 	HStack,
 	Spacer,
-	IconButton
+	IconButton,
+	Text
 } from '@chakra-ui/react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
@@ -64,6 +65,12 @@ export const DesignsList: BlitzPage = () => {
 
 	return (
 		<VStack spacing={10} align="flex-start">
+			{
+				designs.length === 0 && page === 0 && (
+					<Text w="full" textAlign="center" color="gray.500" fontWeight="bold" mt={10}>There's nothing here yet.</Text>
+				)
+			}
+
 			<Wrap spacing={10}>
 				{designs.map(design => (
 					<WrapItem key={design.id}>

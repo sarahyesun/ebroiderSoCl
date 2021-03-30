@@ -6,7 +6,10 @@ WORKDIR /usr/app
 
 RUN mkdir /data
 
-RUN apk --no-cache add --virtual build-dependencies libtool autoconf automake build-base git jq
+RUN apk --no-cache add --virtual build-dependencies libtool autoconf automake build-base git jq python3-dev openblas-dev lapack-dev
+
+COPY scripts/requirements.txt scripts/requirements.txt
+RUN pip3 install -r scripts/requirements.txt
 
 COPY package.json ./
 COPY yarn.lock ./

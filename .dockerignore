@@ -10,3 +10,4 @@ test
 .next
 uploads
 Dockerfile
+__pycache__
