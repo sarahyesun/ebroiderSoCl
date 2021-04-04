@@ -24,6 +24,9 @@ RUN yarn cache clean
 COPY db db
 RUN yarn prisma generate
 
+ARG NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+
 COPY . .
 RUN yarn build
 
