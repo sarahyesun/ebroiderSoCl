@@ -26,13 +26,16 @@ const handleDownloadRequest = async (request: NextApiRequest, response: NextApiR
 	const archive = archiver('zip', {zlib: {level: 9}});
 
 	const pngPipe = new PassThrough();
+	const stitchesPipe = new PassThrough();
 
 	archive.append(pngPipe, {name: `${design.name}.png`});
+	archive.append(stitchesPipe, {name: `${design.name}.exp`});
 	archive.append(fs.createReadStream(designPath), {name: `${design.name}.svg`});
 
 	archive.pipe(response);
 
 	await executeScript('generate_stitches', fs.createReadStream(designPath), pngPipe, 'svg', 'png');
+	await executeScript('generate_stitches', fs.createReadStream(designPath), stitchesPipe, 'svg', 'exp');
 
 	await archive.finalize();
 };

@@ -448,9 +448,9 @@ class Embroidery:
 
 			def move(x, y):
 				if (x<0): x = x + 256
-				self.string += chr(x)
+				self.string += chr(round(x))
 				if (y<0): y = y + 256
-				self.string += chr(y)
+				self.string += chr(round(y))
 
 			#do several interpolated steps if too long
 			#dbg.write("delta: %d, %d\n" % (delta.x,delta.y))

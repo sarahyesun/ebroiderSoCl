@@ -1,7 +1,6 @@
 import {
 	AppProps,
 	ErrorComponent,
-	useRouter,
 	AuthenticationError,
 	AuthorizationError
 } from 'blitz';
@@ -30,7 +29,6 @@ const theme = extendTheme({
 
 export default function App({Component, pageProps}: AppProps) {
 	const getLayout = Component.getLayout ?? (page => page);
-	const router = useRouter();
 
 	const {reset} = useQueryErrorResetBoundary();
 

@@ -47,3 +47,5 @@ if __name__ == "__main__":
         print(emb.export_svg())
     elif export_format == 'png':
         sys.stdout.buffer.write(emb.export_png().getvalue())
+    elif export_format == 'exp':
+        print(emb.export_melco())

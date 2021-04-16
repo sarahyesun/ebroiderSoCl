@@ -12,10 +12,10 @@ const Home: BlitzPage = () => {
 
 			<Container>
 				<VStack zIndex={10} position="relative" alignItems="flex-start" spacing={4}>
-					<Heading>Wearable Electronics Factory</Heading>
+					<Heading>SoCl</Heading>
 
 					<Text>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+						Welcome to SoCl Cloud Manufacturing Network for designing and manufacturing of embroidered wearable electronics!
 					</Text>
 
 					<ButtonGroup>

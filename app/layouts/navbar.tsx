@@ -79,7 +79,7 @@ const LoginButtons = ({
 };
 
 const LoginButtonsWrapper = () => {
-	const {userId, isLoading} = useSession();
+	const {userId} = useSession();
 	const [logoutMutation] = useMutation(logout);
 	const router = useRouter();
 
@@ -115,7 +115,7 @@ const Navbar = () => {
 			<Flex align="center" mr={5}>
 				<Link passHref href="/">
 					<Heading as="a" size="lg">
-						Wearable Electronics Factory
+						SoCl
 					</Heading>
 				</Link>
 			</Flex>
