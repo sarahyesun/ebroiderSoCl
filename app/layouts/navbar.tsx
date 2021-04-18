@@ -138,7 +138,7 @@ const Navbar = () => {
 				alignItems="center"
 				flexGrow={1}
 			>
-				<WrappedLink href="/designs/public">Public Designs</WrappedLink>
+				<WrappedLink href="/designs/public">Design Library</WrappedLink>
 			</Box>
 
 			<Box
