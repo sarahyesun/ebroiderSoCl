@@ -30,13 +30,31 @@ export const EditDesign = () => {
 				description: design.description,
 				isPublic: design.isPublic,
 				isApproved: design.isApproved,
-				stitchFileId: design.stitchFileId
+				stitchFileId: design.stitchFileId,
+				pictureIds: design.pictures.map(p => p.id)
 			}}
 			onSubmit={async data => {
+				const {pictureIds, ...restOfData} = data;
+
 				const updated = await updateDesignMutation({
 					where: {id: design.id},
-					data
+					data: {
+						...restOfData,
+						pictures: {
+							upsert: pictureIds.map((id, i) => ({
+								where: {id},
+								create: {
+									id,
+									order: i
+								},
+								update: {
+									order: i
+								}
+							}))
+						}
+					}
 				});
+
 				await setQueryData(updated);
 
 				await router.push(router.query.redirect ? router.query.redirect.toString() : `/designs/${updated.id}`);
@@ -68,7 +86,7 @@ const EditDesignPage: BlitzPage = () => {
 };
 
 EditDesignPage.getLayout = page => (
-	<Layout title={'Edit Design'}>{page}</Layout>
+	<Layout bg="gray.50" title={'Edit Design'}>{page}</Layout>
 );
 EditDesignPage.authenticate = true;
 

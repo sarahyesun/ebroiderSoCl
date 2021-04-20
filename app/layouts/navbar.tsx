@@ -108,7 +108,6 @@ const Navbar = () => {
 			padding={6}
 			bg="black"
 			color="white"
-			mb={10}
 			zIndex={10}
 			position="relative"
 		>

@@ -7,7 +7,8 @@ import {
 	FormControl,
 	FormLabel,
 	FormErrorMessage,
-	Textarea
+	Textarea,
+	FormControlProps
 } from '@chakra-ui/react';
 
 export interface LabeledTextFieldProps
@@ -20,7 +21,7 @@ export interface LabeledTextFieldProps
 	label: string;
 	/** Field type. Doesn't include radio buttons. */
 	type?: 'text' | 'password' | 'email' | 'number' | 'checkbox' | 'textarea';
-	outerProps?: PropsWithoutRef<JSX.IntrinsicElements['div']>;
+	outerProps?: FormControlProps;
 }
 
 export const LabeledTextField = React.forwardRef<
@@ -43,7 +44,7 @@ LabeledTextFieldProps
 	const {value, ...propsWithoutValue} = propsWithoutSize;
 
 	return (
-		<FormControl isInvalid={normalizedError && touched} {...outerProps} mb={6}>
+		<FormControl isInvalid={normalizedError && touched} mb={6} {...outerProps}>
 			{props.type === 'checkbox' ? (
 				<Checkbox
 					{...input}

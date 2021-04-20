@@ -1,3 +1,4 @@
+import {WarningTwoIcon} from '@chakra-ui/icons';
 import {BoxProps, Box} from '@chakra-ui/react';
 import {FormSpy} from 'react-final-form';
 
@@ -7,8 +8,6 @@ const ImageUploadPreview = ({
 	...boxProps
 }: { name: string; initialUrl?: string } & BoxProps) => (
 	<Box
-		display="inline-block"
-		height="100%"
 		rounded="sm"
 		overflow="hidden"
 		{...boxProps}
@@ -35,7 +34,11 @@ const ImageUploadPreview = ({
 					);
 				}
 
-				return null;
+				return (
+					<Box bg="gray.100" w="full" h="20vh" d="flex" justifyContent="center" alignItems="center">
+						<WarningTwoIcon color="yellow.300" fontSize={36}/>
+					</Box>
+				);
 			}}
 		</FormSpy>
 	</Box>

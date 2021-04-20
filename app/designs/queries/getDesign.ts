@@ -29,7 +29,14 @@ export default async function getDesign({where}: GetDesignInput, ctx: Ctx) {
 	}
 
 	const design = await db.design.findFirst({
-		where: protectedWhere
+		where: protectedWhere,
+		include: {
+			pictures: {
+				orderBy: {
+					order: 'asc'
+				}
+			}
+		}
 	});
 
 	if (!design) {

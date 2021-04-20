@@ -55,4 +55,14 @@ model Design {
   user         User     @relation(fields: [userId], references: [id])
   userId       Int
   stitchFileId String
+
+  pictures Picture[]
+}
+
+model Picture {
+  id    String @id @default(cuid())
+  order Int
+
+  design   Design? @relation(fields: [designId], references: [id])
+  designId Int?
 }

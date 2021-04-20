@@ -7,8 +7,9 @@ export default async function createDesign(
 		name,
 		description,
 		isPublic,
+		pictureIds,
 		stitchFileId
-	}: { name: string; description: string; isPublic: boolean; stitchFileId: string },
+	}: { name: string; description: string; isPublic: boolean; pictureIds: string[]; stitchFileId: string },
 	ctx: Ctx
 ) {
 	ctx.session.$authorize();
@@ -26,6 +27,15 @@ export default async function createDesign(
 				connect: {
 					id: ctx.session.userId
 				}
+			},
+			pictures: {
+				connectOrCreate: pictureIds.map((id, i) => ({
+					where: {id},
+					create: {
+						id,
+						order: i
+					}
+				}))
 			}
 		}
 	});

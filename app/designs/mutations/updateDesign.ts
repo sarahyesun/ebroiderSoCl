@@ -32,7 +32,7 @@ export default async function updateDesign(
 		delete data.price;
 	}
 
-	const design = await db.design.update({where, data});
+	const design = await db.design.update({where, data, include: {pictures: true}});
 
 	return design;
 }

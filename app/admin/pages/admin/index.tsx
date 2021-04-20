@@ -32,7 +32,7 @@ const ITEMS_PER_PAGE = 10;
 
 const currencyFormat = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
 
-export const DesignsList: BlitzPage = () => {
+export const DesignsList = () => {
 	const router = useRouter();
 	const page = Number(router.query.page) || 0;
 	const [{designs, hasMore}] = usePaginatedQuery(getDesigns, {
@@ -47,7 +47,7 @@ export const DesignsList: BlitzPage = () => {
 	const goToNextPage = async () => router.push({query: {page: page + 1}});
 
 	return (
-		<Table shadow="md">
+		<Table shadow="md" bg="white">
 			<Thead>
 				<Tr>
 					<Th>Name</Th>
@@ -120,7 +120,7 @@ const AdminPage: BlitzPage = () => {
 	);
 };
 
-AdminPage.getLayout = page => <Layout title={'Admin'}>{page}</Layout>;
+AdminPage.getLayout = page => <Layout title={'Admin'} bg="gray.50">{page}</Layout>;
 AdminPage.authenticate = true;
 
 export default AdminPage;

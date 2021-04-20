@@ -11,10 +11,8 @@ type ImageUploadFieldProps = {
 const cloneFileList = (list: FileList) => {
 	const newList: File[] = [];
 
-	// eslint-disable-next-line unicorn/no-for-loop, @typescript-eslint/prefer-for-of
-	for (let i = 0; i < list.length; i++) {
-		newList.push(list[i]);
-	}
+	// eslint-disable-next-line prefer-spread
+	newList.push.apply(newList, list);
 
 	return newList;
 };
@@ -30,7 +28,7 @@ const ImageUploadField = (props: ImageUploadFieldProps) => {
 		error || submitError;
 
 	return (
-		<FormControl mb={6} isInvalid={normalizedError && touched}>
+		<FormControl isInvalid={normalizedError && touched}>
 			<input
 				{...input}
 				onChange={({target}) => {
@@ -39,20 +37,22 @@ const ImageUploadField = (props: ImageUploadFieldProps) => {
 				type="file"
 				id={props.name}
 				style={{display: 'none'}}
-				accept="image/*"
+				accept="image/png,image/jpeg"
 			/>
 
+			<FormErrorMessage>{normalizedError}</FormErrorMessage>
+
 			<Button
+				isFullWidth
 				leftIcon={<ArrowUpIcon />}
 				htmlFor={props.name}
 				as="label"
 				_hover={{cursor: 'pointer'}}
 				disabled={submitting}
+				colorScheme="green"
 			>
 				{props.label}
 			</Button>
-
-			<FormErrorMessage>{normalizedError}</FormErrorMessage>
 		</FormControl>
 	);
 };
