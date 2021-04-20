@@ -74,7 +74,7 @@ export const DesignsList: BlitzPage = () => {
 			<Wrap spacing={10}>
 				{designs.map(design => (
 					<WrapItem key={design.id}>
-						<DesignCard design={design} tags={getTags(design)}/>
+						<DesignCard design={design} tags={getTags(design)} pictureId={design.pictures.length > 0 ? design.pictures[0].id : undefined}/>
 					</WrapItem>
 				))}
 			</Wrap>

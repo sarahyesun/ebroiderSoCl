@@ -4,6 +4,7 @@ import {useField} from 'react-final-form';
 import {Button, IconButton} from '@chakra-ui/button';
 import {ChevronLeftIcon, ChevronRightIcon, DeleteIcon, AddIcon, ArrowLeftIcon, ArrowRightIcon} from '@chakra-ui/icons';
 import {Text, Box} from '@chakra-ui/react';
+import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
 const fileListToArray = (list: FileList) => {
 	const array: File[] = [];
@@ -66,7 +67,7 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 			return URL.createObjectURL(current);
 		}
 
-		return `/api/uploads/${current as string}?type=${encodeURI('image/jpeg')}`;
+		return getUploadPreviewUrl(current);
 	}, [pictures, currentPictureIndex]);
 
 	return (

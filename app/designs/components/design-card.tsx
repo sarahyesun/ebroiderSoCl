@@ -2,13 +2,14 @@ import {LinkBox, LinkOverlay, Box, Text, Skeleton, Tag, Wrap, WrapItem} from '@c
 import {Design} from '@prisma/client';
 import Image from 'next/image';
 import {Link} from 'blitz';
+import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD'
 });
 
-const DesignCard = ({design, tags = []}: { design?: Design; tags?: string[] }) => {
+const DesignCard = ({design, tags = [], pictureId}: { design?: Design; tags?: string[]; pictureId?: string }) => {
 	const loaded = design !== undefined;
 
 	return (
@@ -27,13 +28,18 @@ const DesignCard = ({design, tags = []}: { design?: Design; tags?: string[] }) =
 						position="relative"
 						rounded="sm"
 						overflow="hidden"
+						bg={pictureId ? 'transparent' : 'gray.50'}
 					>
-						<Image
-							src="https://source.unsplash.com/random/256x350"
-							alt="Design preview"
-							layout="fill"
-							objectFit="cover"
-						/>
+						{
+							pictureId && (
+								<Image
+									src={getUploadPreviewUrl(pictureId)}
+									alt="Design preview"
+									layout="fill"
+									objectFit="contain"
+								/>
+							)
+						}
 
 						<Wrap position="absolute" m={2}>
 							{

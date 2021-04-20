@@ -19,7 +19,15 @@ export default async function getDesigns(
 		},
 		orderBy,
 		take,
-		skip
+		skip,
+		include: {
+			pictures: {
+				take: 1,
+				orderBy: {
+					order: 'asc'
+				}
+			}
+		}
 	});
 
 	const count = await db.design.count();
