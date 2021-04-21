@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react';
 import Layout from 'app/layouts/Layout';
-import {Link, usePaginatedQuery, useRouter, BlitzPage, Routes} from 'blitz';
+import {Link, usePaginatedQuery, useRouter, BlitzPage} from 'blitz';
 import {
 	Heading,
 	Box,
@@ -17,8 +17,7 @@ import {
 	Td,
 	Tag,
 	TableCaption,
-	Button,
-	VStack
+	Button
 } from '@chakra-ui/react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
@@ -107,27 +106,21 @@ export const DesignsList = () => {
 	);
 };
 
-const AdminPage: BlitzPage = () => {
+const AdminDesignPage: BlitzPage = () => {
 	return (
 		<Container size="lg">
 			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>Admin</Heading>
+				<Heading>Public & Unapproved Designs</Heading>
 			</Box>
 
-			<VStack spacing={6} alignItems="flex-start">
-				<Link href="/admin/designs" passHref>
-					<Button as="a" size="lg" colorScheme="blue" variant="link" fontSize={24}>Pending Public Designs</Button>
-				</Link>
-
-				<Link href="/admin/users" passHref>
-					<Button as="a" size="lg" colorScheme="blue" variant="link" fontSize={24}>Manage Users</Button>
-				</Link>
-			</VStack>
+			<Suspense fallback={<div/>}>
+				<DesignsList />
+			</Suspense>
 		</Container>
 	);
 };
 
-AdminPage.getLayout = page => <Layout title={'Admin'} bg="gray.50">{page}</Layout>;
-AdminPage.authenticate = true;
+AdminDesignPage.getLayout = page => <Layout title={'Pending Designs'} bg="gray.50">{page}</Layout>;
+AdminDesignPage.authenticate = true;
 
-export default AdminPage;
+export default AdminDesignPage;

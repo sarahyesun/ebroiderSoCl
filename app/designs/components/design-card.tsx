@@ -1,7 +1,6 @@
 import {LinkBox, LinkOverlay, Box, Text, Skeleton, Tag, Wrap, WrapItem} from '@chakra-ui/react';
 import {Design} from '@prisma/client';
-import Image from 'next/image';
-import {Link} from 'blitz';
+import {Link, Image} from 'blitz';
 import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
