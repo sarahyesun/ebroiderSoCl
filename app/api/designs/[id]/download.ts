@@ -4,15 +4,33 @@ import fs from 'fs';
 import path from 'path';
 import {UPLOAD_DIR} from 'utils/config';
 import prisma from 'db';
-import {PassThrough} from 'stream';
-import executeScript from 'utils/execute-python';
+
+const mimeToExtension = (mime: string) => {
+	switch (mime) {
+		case 'image/png':
+			return 'png';
+		case 'image/svg+xml':
+			return 'svg';
+		case 'application/octet-stream':
+			return 'exp';
+		default:
+			return '';
+	}
+};
 
 const handleDownloadRequest = async (request: NextApiRequest, response: NextApiResponse) => {
 	// TODO: add auth
 
 	const {query: {id}} = request;
 
-	const design = await prisma.design.findUnique({where: {id: Number.parseInt(id as string, 10)}});
+	const design = await prisma.design.findUnique({
+		where: {
+			id: Number.parseInt(id as string, 10)
+		},
+		include: {
+			files: true
+		}
+	});
 
 	if (!design) {
 		response.status(404).end();
@@ -21,23 +39,14 @@ const handleDownloadRequest = async (request: NextApiRequest, response: NextApiR
 
 	response.setHeader('Content-Disposition', `attachment; filename=${design.name}.zip`);
 
-	// Const designPath = path.join(UPLOAD_DIR, `${design.stitchFileId}.svg`);
+	const archive = archiver('zip', {zlib: {level: 9}});
 
-	// const archive = archiver('zip', {zlib: {level: 9}});
+	for (const f of design.files) {
+		archive.append(fs.createReadStream(path.join(UPLOAD_DIR, f.id)), {name: `${design.name}.${mimeToExtension(f.type)}`});
+	}
 
-	// const pngPipe = new PassThrough();
-	// const stitchesPipe = new PassThrough();
-
-	// archive.append(pngPipe, {name: `${design.name}.png`});
-	// archive.append(stitchesPipe, {name: `${design.name}.exp`});
-	// archive.append(fs.createReadStream(designPath), {name: `${design.name}.svg`});
-
-	// archive.pipe(response);
-
-	// await executeScript('generate_stitches', fs.createReadStream(designPath), pngPipe, 'svg', 'png');
-	// await executeScript('generate_stitches', fs.createReadStream(designPath), stitchesPipe, 'svg', 'exp');
-
-	// await archive.finalize();
+	archive.pipe(response);
+	await archive.finalize();
 };
 
 export default handleDownloadRequest;
