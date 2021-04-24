@@ -27,7 +27,7 @@ export const Design = () => {
 		<Grid templateColumns={{sm: '1fr', md: '40% 1fr'}} templateRows={{sm: '1fr 1fr', md: '1fr'}} gap={24}>
 			<VStack>
 				<Box h="30vh" d="flex" position="relative" w="full">
-					<Image src={design.pictures.length > 0 ? getUploadPreviewUrl(design.pictures[currentPictureIndex].id) : getUploadPreviewUrl(design.stitchFileId, 'svg')} objectFit="contain" layout="fill"/>
+					<Image src={design.pictures.length > 0 ? getUploadPreviewUrl(design.pictures[currentPictureIndex].id) : getUploadPreviewUrl(design.files.find(f => f.type === 'image/svg+xml')!.id, 'svg')} objectFit="contain" layout="fill"/>
 				</Box>
 
 				{

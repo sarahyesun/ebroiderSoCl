@@ -12,7 +12,7 @@ const route = nextConnect<NextApiRequest, NextApiResponse>();
 route.use(multer().array('picture'));
 
 route.post(async (request, response) => {
-  const ids = await Promise.all((request as any).files.map(async (file, i) => {
+  const ids = await Promise.all((request as any).files.map(async (file: any, i: number) => {
     const id = nanoid();
 
     await fs.writeFile(path.join(UPLOAD_DIR, id), file.buffer);

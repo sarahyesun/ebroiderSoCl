@@ -35,7 +35,8 @@ export default async function getDesign({where}: GetDesignInput, ctx: Ctx) {
 				orderBy: {
 					order: 'asc'
 				}
-			}
+			},
+			files: true
 		}
 	});
 

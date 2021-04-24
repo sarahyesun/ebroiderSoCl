@@ -8,13 +8,19 @@ export default async function createDesign(
 		description,
 		isPublic,
 		pictureIds,
-		stitchFileId
-	}: { name: string; description: string; isPublic: boolean; pictureIds: string[]; stitchFileId: string },
+		fileIds
+	}: { name: string; description: string; isPublic: boolean; pictureIds: string[]; fileIds: string[] },
 	ctx: Ctx
 ) {
 	ctx.session.$authorize();
 
-	await processImageUpload(stitchFileId);
+	const files = await db.file.findMany({
+		where: {
+			id: {
+				in: fileIds
+			}
+		}
+	});
 
 	const design = await db.design.create({
 		data: {
@@ -22,7 +28,6 @@ export default async function createDesign(
 			description,
 			isPublic,
 			price: 0,
-			stitchFileId,
 			user: {
 				connect: {
 					id: ctx.session.userId
@@ -36,9 +41,14 @@ export default async function createDesign(
 						order: i
 					}
 				}))
+			},
+			files: {
+				connect: fileIds.map(id => ({id}))
 			}
 		}
 	});
+
+	await processImageUpload(design, files[0].id);
 
 	return design;
 }

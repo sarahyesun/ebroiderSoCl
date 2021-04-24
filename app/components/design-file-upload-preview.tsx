@@ -1,4 +1,4 @@
-import {WarningTwoIcon} from '@chakra-ui/icons';
+import {AttachmentIcon, WarningTwoIcon} from '@chakra-ui/icons';
 import {BoxProps, Box} from '@chakra-ui/react';
 import {FormSpy} from 'react-final-form';
 
@@ -17,14 +17,19 @@ const ImageUploadPreview = ({
 				const files = props.values[name];
 
 				let src: string | null = null;
+				let isEXP = false;
 
 				if (files && files.length > 0) {
-					src = URL.createObjectURL(files[0]);
+					if (files[0].type === '') {
+						isEXP = true;
+					} else {
+						src = URL.createObjectURL(files[0]);
+					}
 				} else if (initialUrl) {
 					src = initialUrl;
 				}
 
-				if (src) {
+				if (src && !isEXP) {
 					return (
 						<img
 							src={src}
@@ -36,7 +41,11 @@ const ImageUploadPreview = ({
 
 				return (
 					<Box bg="gray.100" w="full" h="20vh" d="flex" justifyContent="center" alignItems="center">
-						<WarningTwoIcon color="yellow.300" fontSize={36}/>
+						{
+							isEXP ?
+								<AttachmentIcon color="green.400" fontSize={36}/>							:
+								<WarningTwoIcon color="yellow.300" fontSize={36}/>
+						}
 					</Box>
 				);
 			}}

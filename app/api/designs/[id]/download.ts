@@ -21,23 +21,23 @@ const handleDownloadRequest = async (request: NextApiRequest, response: NextApiR
 
 	response.setHeader('Content-Disposition', `attachment; filename=${design.name}.zip`);
 
-	const designPath = path.join(UPLOAD_DIR, `${design.stitchFileId}.svg`);
+	// Const designPath = path.join(UPLOAD_DIR, `${design.stitchFileId}.svg`);
 
-	const archive = archiver('zip', {zlib: {level: 9}});
+	// const archive = archiver('zip', {zlib: {level: 9}});
 
-	const pngPipe = new PassThrough();
-	const stitchesPipe = new PassThrough();
+	// const pngPipe = new PassThrough();
+	// const stitchesPipe = new PassThrough();
 
-	archive.append(pngPipe, {name: `${design.name}.png`});
-	archive.append(stitchesPipe, {name: `${design.name}.exp`});
-	archive.append(fs.createReadStream(designPath), {name: `${design.name}.svg`});
+	// archive.append(pngPipe, {name: `${design.name}.png`});
+	// archive.append(stitchesPipe, {name: `${design.name}.exp`});
+	// archive.append(fs.createReadStream(designPath), {name: `${design.name}.svg`});
 
-	archive.pipe(response);
+	// archive.pipe(response);
 
-	await executeScript('generate_stitches', fs.createReadStream(designPath), pngPipe, 'svg', 'png');
-	await executeScript('generate_stitches', fs.createReadStream(designPath), stitchesPipe, 'svg', 'exp');
+	// await executeScript('generate_stitches', fs.createReadStream(designPath), pngPipe, 'svg', 'png');
+	// await executeScript('generate_stitches', fs.createReadStream(designPath), stitchesPipe, 'svg', 'exp');
 
-	await archive.finalize();
+	// await archive.finalize();
 };
 
 export default handleDownloadRequest;

@@ -26,6 +26,11 @@ export default async function getDesigns(
 				orderBy: {
 					order: 'asc'
 				}
+			},
+			files: {
+				where: {
+					type: 'image/svg+xml'
+				}
 			}
 		}
 	});

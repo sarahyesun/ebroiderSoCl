@@ -1,24 +1,30 @@
-import React, {Suspense, useCallback} from 'react';
+import React, {Suspense} from 'react';
 import * as z from 'zod';
 import {Design} from '@prisma/client';
-import {Grid, Box, HStack, Spacer, Button, FormControl, BoxProps} from '@chakra-ui/react';
+import {Grid, Box, HStack, Spacer, Button, BoxProps} from '@chakra-ui/react';
 import {DeleteIcon} from '@chakra-ui/icons';
-import {Except, SetOptional} from 'type-fest';
+import {Except} from 'type-fest';
 import Form from 'app/components/Form';
 import TextField from 'app/components/LabeledTextField';
-import ImageUploadField from 'app/components/image-upload-field';
-import ImageUploadPreview from 'app/components/image-upload-preview';
+import ImageUploadField from 'app/components/design-file-upload-field';
+import ImageUploadPreview from 'app/components/design-file-upload-preview';
 import MultiImageUploadField from 'app/components/multi-image-upload-field';
-import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 import {useCurrentUser} from 'app/hooks/useCurrentUser';
+import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
-type EditableFields = SetOptional<Except<
-Design,
-'createdAt' | 'updatedAt' | 'userId' | 'id' | 'price'
->, 'stitchFileId'> & {pictureIds: string[]};
+type PartialBy<T, K extends keyof T> = Except<T, K> & Partial<Pick<T, K>>;
+
+type AdminEditableFields = 'isApproved';
+type UneditableFields = 'createdAt' | 'updatedAt' | 'userId' | 'id' | 'price';
+type ComputedFields = {pictureIds: string[]; fileIds: string[]};
+
+type EditableFields = Except<PartialBy<Design, AdminEditableFields>, UneditableFields> & ComputedFields;
+
+type HydrateableFields = {previewId: string};
 
 type DesignFormProps = {
 	initialValues: Partial<EditableFields>;
+	hydrateValues?: Partial<HydrateableFields>;
 	onSubmit: (values: EditableFields) => Record<string, unknown> | Promise<void>;
 	onDelete?: () => Promise<void>;
 	submitIcon?: React.ReactElement;
@@ -33,8 +39,6 @@ const schema = z.object({
 	isPublic: z.boolean(),
 	isApproved: z.boolean().optional()
 });
-
-const schemaWithoutImage = schema.extend({design: z.undefined()});
 
 const AdminFields = () => {
 	const user = useCurrentUser();
@@ -60,6 +64,7 @@ const FormCard = ({children, ...rest}: FormCardProps) => (
 
 const DesignForm = ({
 	initialValues,
+	hydrateValues,
 	onSubmit,
 	onDelete,
 	submitIcon,
@@ -69,14 +74,17 @@ const DesignForm = ({
 		<Form
 			submitText={submitText}
 			onSubmit={async values => {
-				const {design, pictures, ...valuesToSubmit} = values;
+				const {design, pictures, ...rest} = values;
+
+				const valuesToSubmit: EditableFields = {...rest, pictureIds: [], fileIds: []};
 
 				// Upload design
 				if (design && design.length > 0) {
+					const file = design[0] as File;
 					const formData = new FormData();
-					formData.append('file', design[0] as File);
+					formData.append('file', file);
 					const {id} = await (await fetch('/api/uploads', {body: formData, method: 'POST'})).json();
-					(valuesToSubmit as EditableFields).stitchFileId = id;
+					valuesToSubmit.fileIds.push(id);
 				}
 
 				// Upload pictures
@@ -102,18 +110,14 @@ const DesignForm = ({
 						}
 					}
 
-					(valuesToSubmit as EditableFields).pictureIds = pictureIds as string[];
+					valuesToSubmit.pictureIds = pictureIds as string[];
 				}
 
-				await onSubmit({
-					isApproved: valuesToSubmit.isApproved ?? false,
-					pictureIds: (valuesToSubmit as EditableFields).pictureIds ?? [],
-					...valuesToSubmit
-				});
+				await onSubmit(valuesToSubmit);
 			}}
 			submitIcon={submitIcon}
-			schema={initialValues.stitchFileId ? schemaWithoutImage : schema}
-			initialValues={{...initialValues, pictures: initialValues.pictureIds}}
+			schema={schema}
+			initialValues={{design: [], ...initialValues, pictures: initialValues.pictureIds ?? []}}
 		>
 			{({submitButton, submitting}) => (
 				<Grid
@@ -164,7 +168,7 @@ const DesignForm = ({
 
 					<Box pb={4}>
 						<FormCard h="min(100%, 50vh)">
-							<ImageUploadPreview name="design" mb={6} initialUrl={initialValues.stitchFileId ? getUploadPreviewUrl(initialValues.stitchFileId, 'svg') : undefined}/>
+							<ImageUploadPreview name="design" mb={6} initialUrl={hydrateValues?.previewId ? getUploadPreviewUrl(hydrateValues.previewId, 'svg') : undefined}/>
 							<Spacer/>
 							<ImageUploadField label="Upload Design" name="design"/>
 						</FormCard>

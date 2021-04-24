@@ -30,7 +30,7 @@ const DesignsListPlaceholder = () => (
 	<Wrap spacing={10}>
 		{Array.from(Array.from({length: 4}).keys()).map(i => (
 			<WrapItem key={i}>
-				<DesignCard />
+				<DesignCard/>
 			</WrapItem>
 		))}
 	</Wrap>
@@ -74,7 +74,11 @@ export const DesignsList: BlitzPage = () => {
 			<Wrap spacing={10}>
 				{designs.map(design => (
 					<WrapItem key={design.id}>
-						<DesignCard design={design} tags={getTags(design)} pictureId={design.pictures.length > 0 ? design.pictures[0].id : undefined}/>
+						<DesignCard
+							design={design}
+							tags={getTags(design)}
+							pictureId={design.pictures.length > 0 ? design.pictures[0].id : undefined}
+							fallbackFileId={design.files.find(f => f.type === 'image/svg+xml')!.id}/>
 					</WrapItem>
 				))}
 			</Wrap>

@@ -10,7 +10,7 @@ const fileListToArray = (list: FileList) => {
 	const array: File[] = [];
 
 	// eslint-disable-next-line prefer-spread
-	array.push.apply(array, list);
+	array.push.apply(array, list as unknown as File[]);
 
 	return array;
 };

@@ -1,4 +1,5 @@
 from io import BytesIO
+from binarize import binarize_image
 from PIL import Image
 import numpy
 import sys
@@ -9,8 +10,8 @@ from skimage.measure import find_contours
 from skimage import img_as_bool
 
 if __name__ == "__main__":
-    input_format = 'png'
-    export_format = 'svg'
+    input_format = 'image/png'
+    export_format = 'image/svg+xml'
 
     if len(sys.argv) == 3:
         input_format = sys.argv[1]
@@ -21,8 +22,8 @@ if __name__ == "__main__":
     emb = stitchcode.Embroidery()
 
     # Import
-    if input_format == 'png':
-        image_file = Image.open(sys.stdin.buffer)
+    if input_format == 'image/png':
+        image_file = binarize_image(Image.open(sys.stdin.buffer))
         image = numpy.array(image_file)
 
         image=img_as_bool(image)
@@ -39,13 +40,15 @@ if __name__ == "__main__":
 
         for i in range(len(mat)):
             emb.addStitch(stitchcode.Point(mat[i,0],mat[i,1]))
-    elif input_format == 'svg':
+    elif input_format == 'image/svg+xml':
         emb.import_svg()
+    elif input_format == 'application/octet-stream':
+        emb.import_melco(sys.stdin.buffer)
 
     # Export
-    if export_format == 'svg':
+    if export_format == 'image/svg+xml':
         print(emb.export_svg())
-    elif export_format == 'png':
+    elif export_format == 'image/png':
         sys.stdout.buffer.write(emb.export_png().getvalue())
-    elif export_format == 'exp':
+    elif export_format == 'application/octet-stream':
         print(emb.export_melco())

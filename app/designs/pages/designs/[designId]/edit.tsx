@@ -30,11 +30,14 @@ export const EditDesign = () => {
 				description: design.description,
 				isPublic: design.isPublic,
 				isApproved: design.isApproved,
-				stitchFileId: design.stitchFileId,
-				pictureIds: design.pictures.map(p => p.id)
+				pictureIds: design.pictures.map(p => p.id),
+				fileIds: design.files.map(f => f.id)
+			}}
+			hydrateValues={{
+				previewId: design.files.find(f => f.type === 'image/svg+xml')?.id
 			}}
 			onSubmit={async data => {
-				const {pictureIds, ...restOfData} = data;
+				const {pictureIds, fileIds, ...restOfData} = data;
 
 				const updated = await updateDesignMutation({
 					where: {id: design.id},
@@ -51,7 +54,11 @@ export const EditDesign = () => {
 									order: i
 								}
 							}))
-						}
+						},
+						files: fileIds.length > 0 ? {
+							connect: fileIds.map(id => ({id})),
+							disconnect: design.files.map(({id}) => ({id}))
+						} : undefined
 					}
 				});
 

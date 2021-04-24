@@ -499,7 +499,12 @@ class Embroidery:
 		self.addStitch(Point(lastx, lasty, False))
 
 		jump = False
-		f = open(filename, "rb")
+
+		f = filename
+
+		if type(filename) is str:
+			f = open(filename, "rb")
+
 		byte = " "
 		while byte:
 			byte = f.read(1)

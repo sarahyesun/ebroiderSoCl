@@ -55,9 +55,18 @@ model Design {
   price        Int
   user         User     @relation(fields: [userId], references: [id])
   userId       Int
-  stitchFileId String
 
   pictures Picture[]
+  files    File[]
+}
+
+model File {
+  id        String   @id @default(cuid())
+  type      String
+  updatedAt DateTime @updatedAt
+
+  design   Design? @relation(fields: [designId], references: [id])
+  designId Int?
 }
 
 model Picture {

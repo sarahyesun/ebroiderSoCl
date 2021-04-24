@@ -8,7 +8,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 	currency: 'USD'
 });
 
-const DesignCard = ({design, tags = [], pictureId}: { design?: Design; tags?: string[]; pictureId?: string }) => {
+const DesignCard = ({design, tags = [], pictureId, fallbackFileId}: { design?: Design; tags?: string[]; pictureId?: string; fallbackFileId?: string }) => {
 	const loaded = design !== undefined;
 
 	return (
@@ -27,18 +27,16 @@ const DesignCard = ({design, tags = [], pictureId}: { design?: Design; tags?: st
 						position="relative"
 						rounded="sm"
 						overflow="hidden"
-						bg={pictureId ? 'transparent' : 'gray.50'}
+						bg={(pictureId || fallbackFileId) ? 'transparent' : 'gray.50'}
 					>
-						{
-							pictureId && (
-								<Image
-									src={getUploadPreviewUrl(pictureId)}
-									alt="Design preview"
-									layout="fill"
-									objectFit="contain"
-								/>
-							)
-						}
+						{(pictureId || fallbackFileId) && (
+							<Image
+								src={getUploadPreviewUrl(pictureId ?? fallbackFileId!, pictureId ? undefined : 'svg')}
+								alt="Design preview"
+								layout="fill"
+								objectFit="contain"
+							/>
+						)}
 
 						<Wrap position="absolute" m={2}>
 							{

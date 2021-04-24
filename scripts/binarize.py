@@ -24,11 +24,13 @@ def binarize_array(numpy_array, threshold=200):
                     numpy_array[i][j] = 255
         return numpy_array
 
-if __name__ == "__main__":
-    image_file = Image.open(sys.stdin.buffer)
+def binarize_image(image_file):
     image = image_file.convert('L')  # convert image to monochrome
     image = numpy.array(image)
     threshold = threshold_mean(image)
     image = binarize_array(image, threshold)
+    return Image.fromarray(image)
 
-    Image.fromarray(image).save(sys.stdout.buffer, 'PNG')
+if __name__ == "__main__":
+    image_file = Image.open(sys.stdin.buffer)
+    binarize_image(image_file).save(sys.stdout.buffer, 'PNG')

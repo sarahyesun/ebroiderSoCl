@@ -5,7 +5,6 @@ import createDesign from 'app/designs/mutations/createDesign';
 import DesignForm from 'app/designs/components/DesignForm';
 import {Container, Heading} from '@chakra-ui/react';
 import {AddIcon} from '@chakra-ui/icons';
-import {SetRequired} from 'type-fest';
 
 const NewDesignPage: BlitzPage = () => {
 	const router = useRouter();
@@ -19,11 +18,7 @@ const NewDesignPage: BlitzPage = () => {
 				initialValues={{isPublic: false}}
 				submitIcon={<AddIcon />}
 				onSubmit={async data => {
-					if (!data.stitchFileId) {
-						throw new Error('Missing file');
-					}
-
-					const design = await createDesignMutation(data as (SetRequired<typeof data, 'stitchFileId'>));
+					const design = await createDesignMutation(data);
 
 					await router.push(`/designs/${design.id}`);
 				}}
