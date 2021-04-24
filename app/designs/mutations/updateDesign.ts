@@ -3,10 +3,10 @@ import db, {Prisma} from 'db';
 import processImageUpload from 'utils/process-image-upload';
 import diff from 'arr-diff';
 
-type UpdateDesignInput = Pick<Prisma.DesignUpdateArgs, 'where' | 'data'>;
+type UpdateDesignInput = Pick<Prisma.DesignUpdateArgs, 'where' | 'data'> & {pictureOrder: string[]};
 
 export default async function updateDesign(
-	{where, data}: UpdateDesignInput,
+	{where, data, pictureOrder}: UpdateDesignInput,
 	ctx: Ctx
 ) {
 	ctx.session.$authorize();
@@ -38,6 +38,18 @@ export default async function updateDesign(
 	}
 
 	const design = await db.design.update({where, data, include: {pictures: true, files: true}});
+
+	// Update picture order
+	await Promise.all(pictureOrder.map(async (p, i) => {
+		await db.picture.update({
+			where: {
+				id: p
+			},
+			data: {
+				order: i
+			}
+		});
+	}));
 
 	return design;
 }

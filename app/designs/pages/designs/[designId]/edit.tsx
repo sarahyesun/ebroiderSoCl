@@ -13,6 +13,7 @@ import getDesign from 'app/designs/queries/getDesign';
 import updateDesign from 'app/designs/mutations/updateDesign';
 import DesignForm from 'app/designs/components/DesignForm';
 import deleteDesign from 'app/designs/mutations/deleteDesign';
+import arrDiff from 'arr-diff';
 
 export const EditDesign = () => {
 	const router = useRouter();
@@ -44,22 +45,15 @@ export const EditDesign = () => {
 					data: {
 						...restOfData,
 						pictures: {
-							upsert: pictureIds.map((id, i) => ({
-								where: {id},
-								create: {
-									id,
-									order: i
-								},
-								update: {
-									order: i
-								}
-							}))
+							connect: pictureIds.map(id => ({id})),
+							disconnect: arrDiff(design.pictures.map(p => p.id), pictureIds).map(id => ({id}))
 						},
 						files: fileIds.length > 0 ? {
 							connect: fileIds.map(id => ({id})),
 							disconnect: design.files.map(({id}) => ({id}))
 						} : undefined
-					}
+					},
+					pictureOrder: pictureIds
 				});
 
 				await setQueryData(updated);
