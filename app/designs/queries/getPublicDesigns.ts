@@ -21,11 +21,12 @@ export default async function getDesigns({orderBy, skip = 0, take}: GetDesignsIn
 				orderBy: {
 					order: 'asc'
 				}
-			}
+			},
+			files: true
 		}
 	});
 
-	const count = await db.design.count();
+	const count = await db.design.count({where: {isPublic: true, isApproved: true}});
 	const hasMore = typeof take === 'number' ? skip + take < count : false;
 	const nextPage = hasMore ? {take, skip: skip + take!} : null;
 
