@@ -19,7 +19,8 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 	const [currentPictureIndex, setCurrentPictureIndex] = useState(0);
 
 	const {
-		input: {value: pictures, onChange}
+		input: {value: pictures, onChange},
+		meta: {submitting}
 	} = useField(name);
 
 	const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +88,7 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 							<IconButton
 								aria-label="Previous picture"
 								icon={<ChevronLeftIcon/>}
-								disabled={currentPictureIndex === 0}
+								disabled={currentPictureIndex === 0 || submitting}
 								onClick={() => {
 									setCurrentPictureIndex(i => i - 1);
 								}}/>
@@ -98,13 +99,14 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 								aria-label="Move picture left"
 								icon={<ArrowLeftIcon/>}
 								title="Move picture left"
-								disabled={currentPictureIndex === 0}
+								disabled={currentPictureIndex === 0 || submitting}
 								onClick={handleCurrentPictureMoveBackward}
 							/>
 
 							<Button
 								colorScheme="red"
 								leftIcon={<DeleteIcon/>}
+								disabled={submitting}
 								onClick={handleCurrentPictureRemove}>
                 Remove Image
 							</Button>
@@ -113,7 +115,7 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 								aria-label="Move picture right"
 								icon={<ArrowRightIcon/>}
 								title="Move picture right"
-								disabled={currentPictureIndex === pictures.length - 1 || pictures.length === 0}
+								disabled={currentPictureIndex === pictures.length - 1 || pictures.length === 0 || submitting}
 								onClick={handleCurrentPictureMoveForward}/>
 
 							<Spacer/>
@@ -121,7 +123,7 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 							<IconButton
 								aria-label="Next picture"
 								icon={<ChevronRightIcon/>}
-								disabled={currentPictureIndex === pictures.length - 1 || pictures.length === 0}
+								disabled={currentPictureIndex === pictures.length - 1 || pictures.length === 0 || submitting}
 								onClick={() => {
 									setCurrentPictureIndex(i => i + 1);
 								}}/>
@@ -144,7 +146,8 @@ const MultiImageUploadField = ({name}: {name: string}) => {
 				htmlFor={name}
 				colorScheme="green"
 				leftIcon={<AddIcon/>}
-				_hover={{cursor: 'pointer'}}>
+				_hover={{cursor: 'pointer'}}
+				disabled={submitting}>
         Add Images
 			</Button>
 		</Stack>

@@ -34,7 +34,7 @@ type DesignFormProps = {
 const schema = z.object({
 	name: z.string(),
 	description: z.string(),
-	design: z.array(z.instanceof(typeof window === 'undefined' ? Object : File)),
+	design: z.array(z.union([z.instanceof(typeof window === 'undefined' ? Object : File), z.string()])),
 	pictures: z.array(z.union([z.instanceof(typeof window === 'undefined' ? Object : File), z.string()])),
 	isPublic: z.boolean(),
 	isApproved: z.boolean().optional()
@@ -79,7 +79,7 @@ const DesignForm = ({
 				const valuesToSubmit: EditableFields = {...rest, pictureIds: [], fileIds: []};
 
 				// Upload design
-				if (design && design.length > 0) {
+				if (design && design.length > 0 && typeof design[0] !== 'string') {
 					const file = design[0] as File;
 					const formData = new FormData();
 					formData.append('file', file);
@@ -117,7 +117,7 @@ const DesignForm = ({
 			}}
 			submitIcon={submitIcon}
 			schema={schema}
-			initialValues={{design: [], ...initialValues, pictures: initialValues.pictureIds ?? []}}
+			initialValues={{...initialValues, pictures: initialValues.pictureIds ?? [], design: hydrateValues?.previewId ? [hydrateValues.previewId] : undefined}}
 		>
 			{({submitButton, submitting}) => (
 				<Grid

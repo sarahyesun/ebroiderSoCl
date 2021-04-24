@@ -1,6 +1,7 @@
 import {AttachmentIcon, WarningTwoIcon} from '@chakra-ui/icons';
 import {BoxProps, Box} from '@chakra-ui/react';
 import {FormSpy} from 'react-final-form';
+import getUploadPreviewUrl from 'utils/get-upload-preview-url';
 
 const ImageUploadPreview = ({
 	name,
@@ -22,11 +23,11 @@ const ImageUploadPreview = ({
 				if (files && files.length > 0) {
 					if (files[0].type === '') {
 						isEXP = true;
+					} else if (typeof files[0] === 'string') {
+						src = getUploadPreviewUrl(files[0], 'svg');
 					} else {
 						src = URL.createObjectURL(files[0]);
 					}
-				} else if (initialUrl) {
-					src = initialUrl;
 				}
 
 				if (src && !isEXP) {

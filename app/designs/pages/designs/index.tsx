@@ -78,7 +78,7 @@ export const DesignsList: BlitzPage = () => {
 							design={design}
 							tags={getTags(design)}
 							pictureId={design.pictures.length > 0 ? design.pictures[0].id : undefined}
-							fallbackFileId={design.files.find(f => f.type === 'image/svg+xml')!.id}/>
+							fallbackFileId={design.files.find(f => f.type === 'image/svg+xml')?.id ?? ''}/>
 					</WrapItem>
 				))}
 			</Wrap>
