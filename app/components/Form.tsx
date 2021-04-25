@@ -21,6 +21,7 @@ type FormProps<S extends z.ZodType<any, any>> = {
 	children: ReactNode | ChildWithRenderMethod;
 	/** Text to display in the submit button */
 	submitText: string;
+	banner?: string;
 	submitIcon?: React.ReactElement;
 	schema?: S;
 	onSubmit: FinalFormProps<z.infer<S>>['onSubmit'];
@@ -30,6 +31,7 @@ type FormProps<S extends z.ZodType<any, any>> = {
 export function Form<S extends z.ZodType<any, any>>({
 	children,
 	submitText,
+	banner,
 	submitIcon,
 	schema,
 	initialValues,
@@ -59,6 +61,15 @@ export function Form<S extends z.ZodType<any, any>>({
 							<AlertDescription>{submitError}</AlertDescription>
 						</Alert>
 					)}
+
+					{
+						banner && (
+							<Alert status="success" mb={5}>
+								<AlertIcon />
+								<AlertDescription>{banner}</AlertDescription>
+							</Alert>
+						)
+					}
 
 					{/* Form fields supplied as children are rendered here */}
 					{hasRenderMethod(children) ?

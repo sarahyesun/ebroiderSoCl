@@ -4,7 +4,7 @@ import {LabeledTextField} from 'app/components/LabeledTextField';
 import {Form, FORM_ERROR} from 'app/components/Form';
 import login from 'app/auth/mutations/login';
 import {LoginInput} from 'app/auth/validations';
-import {Heading} from '@chakra-ui/react';
+import {Heading, Box} from '@chakra-ui/react';
 import WrappedLink from 'app/components/link';
 
 type LoginFormProps = {
@@ -15,7 +15,7 @@ export const LoginForm = (props: LoginFormProps) => {
 	const [loginMutation] = useMutation(login);
 
 	return (
-		<div>
+		<Box>
 			<Heading mb={5}>Login</Heading>
 
 			<Form
@@ -48,10 +48,14 @@ export const LoginForm = (props: LoginFormProps) => {
 				/>
 			</Form>
 
-			<div style={{marginTop: '1rem'}}>
+			<Box mt={4}>
         Or, <WrappedLink href="/signup">sign up</WrappedLink>.
-			</div>
-		</div>
+			</Box>
+
+			<Box mt={4}>
+        I <WrappedLink href="/reset-password">forgot my password</WrappedLink>.
+			</Box>
+		</Box>
 	);
 };
 

@@ -10,7 +10,7 @@ const WrappedLink = ({
 	...props
 }: LinkProps & { children: string; boxProps?: DisplayLinkProps }) => (
 	<Link {...props} passHref>
-		<DisplayLink {...boxProps}>{children}</DisplayLink>
+		<DisplayLink color="blue.400" {...boxProps}>{children}</DisplayLink>
 	</Link>
 );
 

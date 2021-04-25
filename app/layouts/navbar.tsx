@@ -110,6 +110,7 @@ const Navbar = () => {
 			color="white"
 			zIndex={10}
 			position="relative"
+			fontWeight="bold"
 		>
 			<Flex align="center" mr={5}>
 				<Link passHref href="/">
