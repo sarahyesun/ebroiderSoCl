@@ -4,12 +4,12 @@ import db, {Role, Prisma} from 'db';
 
 export default async function signup(input: SignupInputType, {session}: Ctx) {
 	// This throws an error if input is invalid
-	const {email, password} = SignupInput.parse(input);
+	const {email, password, name} = SignupInput.parse(input);
 
 	try {
 		const hashedPassword = await SecurePassword.hash(password);
 		const user = await db.user.create({
-			data: {email: email.toLowerCase(), hashedPassword, role: Role.USER},
+			data: {email: email.toLowerCase(), hashedPassword, name, role: Role.USER},
 			select: {id: true, name: true, email: true, role: true}
 		});
 

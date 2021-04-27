@@ -36,6 +36,7 @@ export const SignupForm = (props: SignupFormProps) => {
 				onSubmit={onSubmit}
 			>
 				<TextField name="email" label="Email" placeholder="Email" />
+				<TextField name="name" label="Name" placeholder="Name" />
 				<TextField
 					name="password"
 					label="Password"
