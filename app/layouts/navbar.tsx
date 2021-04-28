@@ -1,17 +1,12 @@
 import React, {Suspense, useCallback, useState} from 'react';
-import {Flex, Heading, Box, Button, IconButton, useDisclosure, Badge} from '@chakra-ui/react';
+import {Flex, Heading, Box, Button} from '@chakra-ui/react';
 import {Link, useMutation, useRouter, useSession} from 'blitz';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 import WrappedLink from 'app/components/link';
 import logout from 'app/auth/mutations/logout';
-import CartDrawer from 'app/cart/components/cart-drawer';
-import {useCart} from 'app/hooks/useCart';
+import CartButton from 'app/cart/components/cart-button';
 
 const AuthenticatedLinks = ({show}: { show: boolean }) => {
 	const {userId, roles} = useSession();
-	const {isOpen, onOpen, onClose} = useDisclosure();
-	const {items} = useCart();
 
 	if (!userId) {
 		return null;
@@ -52,32 +47,7 @@ const AuthenticatedLinks = ({show}: { show: boolean }) => {
 				))}
 			</Box>
 
-			<Box position="relative" mr="1rem">
-				<IconButton
-					aria-label="View cart"
-					icon={<FontAwesomeIcon icon={faShoppingCart} />}
-					colorScheme="gray"
-					variant="ghost"
-					_hover={{background: 'white', color: 'black'}}
-					onClick={onOpen}
-				/>
-
-				{
-					items.length > 0 && (
-						<Badge
-							fontSize="xs"
-							position="absolute"
-							colorScheme="purple"
-							variant="solid"
-							top={0}
-							right={0}>
-							{items.length}
-						</Badge>
-					)
-				}
-			</Box>
-
-			<CartDrawer isOpen={isOpen} onClose={onClose}/>
+			<CartButton/>
 		</>
 	);
 };

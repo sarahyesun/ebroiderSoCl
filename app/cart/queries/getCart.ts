@@ -3,7 +3,9 @@ import db from 'db';
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
 export default async function getCart(_ = null, ctx: Ctx) {
-	ctx.session.$authorize();
+	if (!ctx.session.userId) {
+		return null;
+	}
 
 	const include = {
 		items: {

@@ -12,5 +12,7 @@ export default async function updateCart({where, data}: UpdateCartInput, ctx: Ct
 		throw new Error('Unauthorized');
 	}
 
+	// TODO: protect against adding non-public non-user owned designs to cart
+
 	return db.cart.update({where, data});
 }
