@@ -29,6 +29,7 @@ model User {
   sessions            Session[]
   Design              Design[]
   passwordResetTokens PasswordResetToken[]
+  Cart                Cart[]
 }
 
 model PasswordResetToken {
@@ -52,6 +53,24 @@ model Session {
   privateData        String?
 }
 
+model Cart {
+  id    String     @id @default(cuid())
+  items CartItem[]
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model CartItem {
+  quantity Int     @default(1)
+  design   Design  @relation(fields: [designId], references: [id])
+  designId Int
+  Cart     Cart   @relation(fields: [cartId], references: [id])
+  cartId   String
+
+  @@id([cartId, designId])
+}
+
 model Design {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
@@ -64,8 +83,9 @@ model Design {
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
 
-  pictures Picture[]
-  files    File[]
+  pictures  Picture[]
+  files     File[]
+  cartItems CartItem[]
 }
 
 model File {

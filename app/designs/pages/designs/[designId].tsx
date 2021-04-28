@@ -1,4 +1,4 @@
-import {Suspense, useState} from 'react';
+import {Suspense, useState, useCallback} from 'react';
 import Layout from 'app/layouts/Layout';
 import {
 	Link,
@@ -12,16 +12,22 @@ import {Heading, Text, Grid, Container, Box, Spacer, Button, VStack, Wrap, WrapI
 import getDesign from 'app/designs/queries/getDesign';
 import {ChevronLeftIcon, ChevronRightIcon, EditIcon} from '@chakra-ui/icons';
 import getUploadPreviewUrl from 'utils/get-upload-preview-url';
+import {useCart} from 'app/hooks/useCart';
 
 const currencyFormat = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
 
 export const Design = () => {
+	const {addDesignIdToCart} = useCart();
 	const [currentPictureIndex, setCurrentPictureIndex] = useState(0);
 	const designId = useParam('designId', 'number');
 	const [design] = useQuery(getDesign, {where: {id: designId}});
 
 	const session = useSession();
 	const canEditDesign = session.roles?.includes('ADMIN') === true || design.userId === session.userId;
+
+	const handleCartAdd = useCallback(async () => {
+		await addDesignIdToCart(designId!);
+	}, [addDesignIdToCart, designId]);
 
 	return (
 		<Grid templateColumns={{sm: '1fr', md: '40% 1fr'}} templateRows={{sm: '1fr 1fr', md: '1fr'}} gap={24}>
@@ -83,7 +89,7 @@ export const Design = () => {
 
 				</HStack>
 
-				<Heading size="md" mb={2}>{currencyFormat.format(design.price)}</Heading>
+				<Heading size="md" mb={2}>{currencyFormat.format(design.price / 100)}</Heading>
 
 				<Text mb={6}>
 					{design.description}
@@ -91,7 +97,7 @@ export const Design = () => {
 
 				<Wrap spacing={4}>
 					<WrapItem>
-						<Button colorScheme="blue">Add to cart</Button>
+						<Button colorScheme="blue" onClick={handleCartAdd}>Add to cart</Button>
 					</WrapItem>
 
 					<WrapItem>
