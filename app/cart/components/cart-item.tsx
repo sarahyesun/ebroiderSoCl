@@ -65,6 +65,7 @@ const CartItem = ({name, quantity: q, price, onUpdateQuantity}: {name: string; q
 							colorScheme="green"
 							_hover={{cursor: 'pointer'}}
 							py={2}
+							as="button"
 							onClick={() => {
 								setIsUpdatingQuantity(true);
 							}}>

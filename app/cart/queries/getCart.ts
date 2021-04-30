@@ -16,7 +16,7 @@ export default async function getCart(_ = null, ctx: Ctx) {
 	};
 
 	let cart = await db.cart.findFirst({
-		where: {userId: ctx.session.userId},
+		where: {userId: ctx.session.userId, orderedAt: null},
 		include
 	});
 

@@ -130,6 +130,7 @@ export const useCart = () => {
 	}, [items]);
 
 	return {
+		id,
 		total,
 		items,
 		numOfItems: numberOfItems,
