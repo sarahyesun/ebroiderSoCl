@@ -22,7 +22,7 @@ const AuthenticatedLinks = ({show}: { show: boolean }) => {
 			label: 'My Designs'
 		},
 		{
-			href: '/orders',
+			href: '/orders/mine',
 			label: 'My Orders'
 		}
 	];

@@ -30,6 +30,7 @@ model User {
   Design              Design[]
   passwordResetTokens PasswordResetToken[]
   Cart                Cart[]
+  assignedOrders      Order[]
 }
 
 model PasswordResetToken {
@@ -76,15 +77,20 @@ model CartItem {
 
 enum OrderStatus {
   CREATED
-  PAYED
+  PAID
   MANUFACTURERING
   SHIPPED
 }
 
 model Order {
   id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
   paymentIntentId String?     @unique
+  receiptUrl      String?
   status          OrderStatus @default(CREATED)
+
+  assignedTo   User? @relation(fields: [assignedToId], references: [id])
+  assignedToId Int?
 
   address   Address? @relation(fields: [addressId], references: [id])
   addressId String?

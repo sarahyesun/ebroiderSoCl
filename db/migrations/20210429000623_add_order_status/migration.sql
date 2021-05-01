@@ -5,7 +5,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('CREATED', 'PAYED', 'MANUFACTURERING', 'SHIPPED');
+CREATE TYPE "OrderStatus" AS ENUM ('CREATED', 'PAID', 'MANUFACTURERING', 'SHIPPED');
 
 -- AlterTable
 ALTER TABLE "Order" ADD COLUMN     "status" "OrderStatus" NOT NULL;

@@ -102,6 +102,7 @@
     "pretty-quick": "3.1.0",
     "react-query": "3.9.6",
     "react-test-renderer": "17.0.1",
+    "sass": "1.32.12",
     "ts-jest": "26.5.4",
     "type-fest": "0.21.0",
     "typescript": "~4.1",

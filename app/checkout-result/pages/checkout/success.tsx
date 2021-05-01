@@ -22,7 +22,7 @@ const CheckoutSuccess: BlitzPage = () => {
 				<VStack spacing={6} alignItems="flex-start">
 					<Text>Thank you! You should receive a confirmation email soon.</Text>
 
-					<Link href="/orders" passHref>
+					<Link href="/orders/mine" passHref>
 						<Button as="a" colorScheme="blue" variant="link" fontSize={24}>View Orders</Button>
 					</Link>
 				</VStack>

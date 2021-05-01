@@ -7,7 +7,7 @@ const handleStripeEvent = async (request: NextApiRequest, response: NextApiRespo
 	if (event.type === 'payment_intent.succeeded') {
 		const data = event.data.object;
 
-		const {shipping: {address, name}, id} = data;
+		const {shipping: {address, name}, charges, id} = data;
 
 		const savedAddress = await db.address.create({
 			data: {
@@ -21,13 +21,20 @@ const handleStripeEvent = async (request: NextApiRequest, response: NextApiRespo
 			}
 		});
 
+		let receiptUrl = null;
+
+		if (charges.data.length > 0) {
+			receiptUrl = charges.data[0].receipt_url;
+		}
+
 		const order = await db.order.update({
 			where: {
 				paymentIntentId: id
 			},
 			data: {
-				status: OrderStatus.PAYED,
-				addressId: savedAddress.id
+				status: OrderStatus.PAID,
+				addressId: savedAddress.id,
+				receiptUrl
 			}
 		});
 

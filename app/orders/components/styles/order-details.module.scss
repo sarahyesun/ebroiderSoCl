@@ -1,0 +1,16 @@
+.receipt {
+  $triangle-size: 12px;
+  $stop1: $triangle-size * 1.42;
+  $stop2: $triangle-size * 0.7;
+  $stop1r: $stop1 + 0.01;
+  $stop2r: $stop2 + 0.01;
+  background:
+    linear-gradient(135deg, transparent #{$stop1}, white #{$stop1r}) top left,
+    linear-gradient(45deg, white #{$stop2}, transparent #{$stop2r}) top left,
+    linear-gradient(135deg, white #{$stop2}, transparent #{$stop2r}) bottom left,
+    linear-gradient(45deg, transparent #{$stop1}, white #{$stop1r}) bottom left;
+  background-repeat: repeat-x;
+  background-size: ($triangle-size * 2) $triangle-size;
+  padding: $triangle-size 0;
+  filter: drop-shadow(0 3px 2px rgba(#000, 0.1));
+}
