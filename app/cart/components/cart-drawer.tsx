@@ -22,7 +22,7 @@ const CartDrawer = ({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) =
 
 		await stripe?.redirectToCheckout({sessionId});
 		setIsLoading(false);
-	}, [createOrderMutation]);
+	}, [createOrderMutation, id]);
 
 	return (
 		<Drawer isOpen={isOpen} onClose={onClose} placement="right">
