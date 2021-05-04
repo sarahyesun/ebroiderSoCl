@@ -58,7 +58,7 @@ export const useCart = () => {
 		}));
 
 		await refetch();
-	}, [updateCartMutation, id]);
+	}, [updateCartMutation, id, items]);
 
 	const removeDesignIdFromCart = useCallback(async (designId: Design['id']) => {
 		await updateCartMutation({
