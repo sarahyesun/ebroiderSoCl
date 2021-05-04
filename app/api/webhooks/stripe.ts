@@ -46,11 +46,10 @@ const handleStripeEvent = async (request: NextApiRequest, response: NextApiRespo
 				orderedAt: new Date()
 			}
 		});
-
-		response.status(200).send('');
-
 		// TODO: send confirmation email
 	}
+
+	response.end('');
 };
 
 export default handleStripeEvent;
