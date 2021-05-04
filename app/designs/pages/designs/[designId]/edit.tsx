@@ -76,18 +76,14 @@ export const EditDesign = () => {
 
 const EditDesignPage: BlitzPage = () => {
 	return (
-		<Container size="lg">
-			<Heading mb={6}>Edit Design</Heading>
-
-			<Suspense fallback={<div/>}>
-				<EditDesign/>
-			</Suspense>
-		</Container>
+		<Suspense fallback={<div/>}>
+			<EditDesign/>
+		</Suspense>
 	);
 };
 
 EditDesignPage.getLayout = page => (
-	<Layout bg="gray.50" title={'Edit Design'}>{page}</Layout>
+	<Layout bg="gray.50" title={'Edit Design'} header="Edit Design">{page}</Layout>
 );
 EditDesignPage.authenticate = true;
 

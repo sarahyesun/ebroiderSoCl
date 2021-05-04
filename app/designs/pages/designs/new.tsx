@@ -11,24 +11,20 @@ const NewDesignPage: BlitzPage = () => {
 	const [createDesignMutation] = useMutation(createDesign);
 
 	return (
-		<Container size="lg">
-			<Heading mb={6}>New Design</Heading>
+		<DesignForm
+			initialValues={{isPublic: false}}
+			submitIcon={<AddIcon />}
+			onSubmit={async data => {
+				const design = await createDesignMutation(data);
 
-			<DesignForm
-				initialValues={{isPublic: false}}
-				submitIcon={<AddIcon />}
-				onSubmit={async data => {
-					const design = await createDesignMutation(data);
-
-					await router.push(`/designs/${design.id}`);
-				}}
-			/>
-		</Container>
+				await router.push(`/designs/${design.id}`);
+			}}
+		/>
 	);
 };
 
 NewDesignPage.getLayout = page => (
-	<Layout title={'Create New Design'} bg="gray.50">{page}</Layout>
+	<Layout title={'Create New Design'} header="New Design" bg="gray.50">{page}</Layout>
 );
 NewDesignPage.authenticate = true;
 

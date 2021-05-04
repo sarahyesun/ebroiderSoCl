@@ -109,25 +109,19 @@ export const DesignsList = () => {
 
 const AdminPage: BlitzPage = () => {
 	return (
-		<Container size="lg">
-			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>Admin</Heading>
-			</Box>
+		<VStack spacing={6} alignItems="flex-start">
+			<Link href="/admin/designs" passHref>
+				<Button as="a" size="lg" colorScheme="blue" variant="link" fontSize={24}>Pending Public Designs</Button>
+			</Link>
 
-			<VStack spacing={6} alignItems="flex-start">
-				<Link href="/admin/designs" passHref>
-					<Button as="a" size="lg" colorScheme="blue" variant="link" fontSize={24}>Pending Public Designs</Button>
-				</Link>
-
-				<Link href="/admin/users" passHref>
-					<Button as="a" size="lg" colorScheme="blue" variant="link" fontSize={24}>Manage Users</Button>
-				</Link>
-			</VStack>
-		</Container>
+			<Link href="/admin/users" passHref>
+				<Button as="a" size="lg" colorScheme="blue" variant="link" fontSize={24}>Manage Users</Button>
+			</Link>
+		</VStack>
 	);
 };
 
-AdminPage.getLayout = page => <Layout title={'Admin'} bg="gray.50">{page}</Layout>;
+AdminPage.getLayout = page => <Layout title={'Admin'} header="Admin" bg="gray.50">{page}</Layout>;
 AdminPage.authenticate = true;
 
 export default AdminPage;

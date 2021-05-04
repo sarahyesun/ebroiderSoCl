@@ -14,19 +14,13 @@ const Confetti = dynamic(async () => import('react-confetti'), {ssr: false});
 const CheckoutSuccess: BlitzPage = () => {
 	return (
 		<>
-			<Container size="lg">
-				<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-					<Heading>Order Placed!</Heading>
-				</Box>
+			<VStack spacing={6} alignItems="flex-start">
+				<Text>Thank you! You should receive a confirmation email soon.</Text>
 
-				<VStack spacing={6} alignItems="flex-start">
-					<Text>Thank you! You should receive a confirmation email soon.</Text>
-
-					<Link href="/orders/mine" passHref>
-						<Button as="a" colorScheme="blue" variant="link" fontSize={24}>View Orders</Button>
-					</Link>
-				</VStack>
-			</Container>
+				<Link href="/orders/mine" passHref>
+					<Button as="a" colorScheme="blue" variant="link" fontSize={24}>View Orders</Button>
+				</Link>
+			</VStack>
 			<Confetti
 				recycle={false}
 			/>
@@ -34,6 +28,6 @@ const CheckoutSuccess: BlitzPage = () => {
 	);
 };
 
-CheckoutSuccess.getLayout = page => <Layout title={'Order Completed!'} bg="gray.50">{page}</Layout>;
+CheckoutSuccess.getLayout = page => <Layout title={'Order Completed!'} bg="gray.50" header="Order Placed!">{page}</Layout>;
 
 export default CheckoutSuccess;

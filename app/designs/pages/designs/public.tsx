@@ -102,22 +102,21 @@ const NewDesignButton = () => {
 
 const DesignsPage: BlitzPage = () => {
 	return (
-		<Container size="lg">
-			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>Public Designs</Heading>
-
-				<Suspense fallback={<div/>}>
-					<NewDesignButton/>
-				</Suspense>
-			</Box>
-
-			<Suspense fallback={<DesignsListPlaceholder />}>
-				<DesignsList />
-			</Suspense>
-		</Container>
+		<Suspense fallback={<DesignsListPlaceholder />}>
+			<DesignsList />
+		</Suspense>
 	);
 };
 
-DesignsPage.getLayout = page => <Layout title={'Public Designs'}>{page}</Layout>;
+DesignsPage.getLayout = page => <Layout
+	title={'Public Designs'}
+	header="Public Designs"
+	rightAction={(
+		<Suspense fallback={<div/>}>
+			<NewDesignButton/>
+		</Suspense>
+	)}>
+	{page}
+</Layout>;
 
 export default DesignsPage;

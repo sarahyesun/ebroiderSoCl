@@ -81,19 +81,13 @@ const OrdersTable = () => {
 
 const MyOrdersPage: BlitzPage = () => {
 	return (
-		<Container size="lg">
-			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>My Orders</Heading>
-			</Box>
-
-			<Suspense fallback={<div/>}>
-				<OrdersTable/>
-			</Suspense>
-		</Container>
+		<Suspense fallback={<div/>}>
+			<OrdersTable/>
+		</Suspense>
 	);
 };
 
-MyOrdersPage.getLayout = page => <Layout title={'My Orders'} bg="gray.50">{page}</Layout>;
+MyOrdersPage.getLayout = page => <Layout title={'My Orders'} header="My Orders" bg="gray.50">{page}</Layout>;
 MyOrdersPage.authenticate = true;
 
 export default MyOrdersPage;

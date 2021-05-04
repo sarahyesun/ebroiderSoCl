@@ -104,29 +104,26 @@ export const DesignsList: BlitzPage = () => {
 
 const DesignsPage: BlitzPage = () => {
 	return (
-		<Container size="lg">
-			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>My Designs</Heading>
-
-				<Link href="/designs/new" passHref>
-					<Button
-						leftIcon={<FontAwesomeIcon icon={faPlus} />}
-						colorScheme="blue"
-						as="a"
-					>
-            New Design
-					</Button>
-				</Link>
-			</Box>
-
-			<Suspense fallback={<DesignsListPlaceholder />}>
-				<DesignsList />
-			</Suspense>
-		</Container>
+		<Suspense fallback={<DesignsListPlaceholder />}>
+			<DesignsList />
+		</Suspense>
 	);
 };
 
-DesignsPage.getLayout = page => <Layout title={'Designs'}>{page}</Layout>;
+DesignsPage.getLayout = page => <Layout
+	title={'Designs'}
+	header="My Designs"
+	rightAction={(
+		<Link href="/designs/new" passHref>
+			<Button
+				leftIcon={<FontAwesomeIcon icon={faPlus} />}
+				colorScheme="blue"
+				as="a"
+			>
+            New Design
+			</Button>
+		</Link>
+	)}>{page}</Layout>;
 DesignsPage.authenticate = true;
 
 export default DesignsPage;

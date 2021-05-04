@@ -98,11 +98,7 @@ const UsersPage: BlitzPage = () => {
 	const [query, setQuery] = useState('');
 
 	return (
-		<Container size="lg">
-			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>Users</Heading>
-			</Box>
-
+		<>
 			<Box bg="white" rounded="md" shadow="md" mb={4}>
 				<Input placeholder="Search by name or email..." size="lg" value={query} onChange={event => {
 					setQuery(event.target.value);
@@ -112,11 +108,11 @@ const UsersPage: BlitzPage = () => {
 			<Suspense fallback={<div/>}>
 				<UsersList query={query}/>
 			</Suspense>
-		</Container>
+		</>
 	);
 };
 
-UsersPage.getLayout = page => <Layout title={'Manage Users'} bg="gray.50">{page}</Layout>;
+UsersPage.getLayout = page => <Layout title={'Manage Users'} header="Users" bg="gray.50">{page}</Layout>;
 UsersPage.authenticate = true;
 
 export default UsersPage;

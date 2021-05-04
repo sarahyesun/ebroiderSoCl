@@ -108,19 +108,13 @@ export const DesignsList = () => {
 
 const AdminDesignPage: BlitzPage = () => {
 	return (
-		<Container size="lg">
-			<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-				<Heading>Public & Unapproved Designs</Heading>
-			</Box>
-
-			<Suspense fallback={<div/>}>
-				<DesignsList />
-			</Suspense>
-		</Container>
+		<Suspense fallback={<div/>}>
+			<DesignsList />
+		</Suspense>
 	);
 };
 
-AdminDesignPage.getLayout = page => <Layout title={'Pending Designs'} bg="gray.50">{page}</Layout>;
+AdminDesignPage.getLayout = page => <Layout title={'Pending Designs'} header="Public & Unapproved Designs" bg="gray.50">{page}</Layout>;
 AdminDesignPage.authenticate = true;
 
 export default AdminDesignPage;
