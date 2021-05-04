@@ -24,7 +24,7 @@ const Layout = ({title, header, rightAction, children, ...rest}: LayoutProps) =>
 				{header ? (
 					<Container size="lg">
 						<Box justifyContent="space-between" flexGrow={1} display="flex" mb={10}>
-							<Heading>{header}</Heading>
+							<Heading size="2xl">{header}</Heading>
 
 							{rightAction}
 						</Box>
