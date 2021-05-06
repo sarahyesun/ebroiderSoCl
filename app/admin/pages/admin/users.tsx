@@ -28,10 +28,11 @@ const UserRoleSelect = ({userId, currentRole}: {userId: number; currentRole: Rol
 			disabled={isLoading}
 			bg={changeSuccess ? 'green.200' : 'transparent'}
 			onChange={handleChange}
+			value={value}
 			size="sm">
 			{
 				Object.values(Role).map(r => (
-					<option key={r} value={r} selected={r === value}>{r}</option>
+					<option key={r} value={r}>{r}</option>
 				))
 			}
 		</Select>

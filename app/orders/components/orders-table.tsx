@@ -6,6 +6,7 @@ import {Link, useAuthenticatedSession, useInfiniteQuery, useMutation, useQuery} 
 import getOrders from '../queries/getOrders';
 import getUsers from 'app/users/queries/getUsers';
 import updateOrder from '../mutations/updateOrder';
+import {m} from 'framer-motion';
 
 type OrdersTableProps = {
 	showBuyer?: boolean;
@@ -58,11 +59,12 @@ const ManufacturerSelect = ({orderId, currentManufacturer}: {orderId: Order['id'
 			bg={changeSuccess ? 'green.200' : 'transparent'}
 			onChange={handleChange}
 			icon={value === null ? <WarningIcon/> : undefined}
+			value={value ?? 'none'}
 			size="sm">
-			<option value="none" selected={value === null}>Unassigned</option>
+			<option value="none">Unassigned</option>
 			{
 				possibleManufacturers.map(m => (
-					<option key={m.id} value={m.id.toString()} selected={m.id === value}>{m.name}</option>
+					<option key={m.id} value={m.id}>{m.name}</option>
 				))
 			}
 		</Select>
