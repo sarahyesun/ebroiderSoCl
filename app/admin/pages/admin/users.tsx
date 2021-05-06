@@ -1,6 +1,6 @@
 import React, {Suspense, useCallback, useState} from 'react';
-import {BlitzPage, useMutation, useInfiniteQuery, useRouter} from 'blitz';
-import {Container, Box, Heading, Tbody, Table, Th, Thead, Tr, Td, Input, Select, useTimeout, Button} from '@chakra-ui/react';
+import {BlitzPage, useMutation, useInfiniteQuery} from 'blitz';
+import {Box, Tbody, Table, Th, Thead, Tr, Td, Input, Select, useTimeout, Button} from '@chakra-ui/react';
 import Layout from 'app/layouts/Layout';
 import getUsers from 'app/users/queries/getUsers';
 import Gravatar from 'react-gravatar';
@@ -27,12 +27,11 @@ const UserRoleSelect = ({userId, currentRole}: {userId: number; currentRole: Rol
 		<Select
 			disabled={isLoading}
 			bg={changeSuccess ? 'green.200' : 'transparent'}
-			value={value}
 			onChange={handleChange}
 			size="sm">
 			{
 				Object.values(Role).map(r => (
-					<option key={r}>{r}</option>
+					<option key={r} value={r} selected={r === value}>{r}</option>
 				))
 			}
 		</Select>

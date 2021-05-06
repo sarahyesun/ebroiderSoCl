@@ -12,12 +12,6 @@ export default async function getOrder({where, include}: GetOrderInput, ctx: Ctx
 		return null;
 	}
 
-	await new Promise<void>(resolve => {
-		setTimeout(() => {
-			resolve();
-		}, 2000);
-	});
-
 	if (order.cart.userId === ctx.session.userId || order.assignedToId === ctx.session.userId || ctx.session.roles.includes('ADMIN')) {
 		return db.order.findUnique({where, include});
 	}

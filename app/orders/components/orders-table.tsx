@@ -1,9 +1,11 @@
-import React, {Suspense} from 'react';
-import {InfoIcon} from '@chakra-ui/icons';
-import {Table, Thead, Tr, Th, Tbody, Td, Button, Skeleton} from '@chakra-ui/react';
-import {Cart, CartItem, Order, OrderStatus, Prisma, User} from 'db';
-import {Link, useAuthenticatedSession, useInfiniteQuery} from 'blitz';
+import React, {Suspense, useCallback, useState} from 'react';
+import {InfoIcon, WarningIcon} from '@chakra-ui/icons';
+import {Table, Thead, Tr, Th, Tbody, Td, Button, Skeleton, Tag, useTimeout, Select} from '@chakra-ui/react';
+import {Cart, CartItem, Order, Prisma, User} from 'db';
+import {Link, useAuthenticatedSession, useInfiniteQuery, useMutation, useQuery} from 'blitz';
 import getOrders from '../queries/getOrders';
+import getUsers from 'app/users/queries/getUsers';
+import updateOrder from '../mutations/updateOrder';
 
 type OrdersTableProps = {
 	showBuyer?: boolean;
@@ -11,15 +13,60 @@ type OrdersTableProps = {
 
 type OrdersTableStaticProps = OrdersTableProps & {
 	isLoading?: boolean;
-	orders?: Array<Order & {cart: (Cart & {items: CartItem[]; user?: User})}>;
+	orders?: Array<Order & {cart: (Cart & {items: CartItem[]; user?: User}); assignedTo?: User}>;
 	hasNextPage?: boolean;
 	fetchNextPage?: () => void;
 	isFetchingNextPage?: boolean;
+	allowManufacturerAssignment?: boolean;
 };
 
 type OrdersTableLiveProps = OrdersTableProps & {
 	where: Prisma.OrderWhereInput;
 	showOwnOrdersOnly?: boolean;
+};
+
+const ManufacturerSelect = ({orderId, currentManufacturer}: {orderId: Order['id']; currentManufacturer: User['id'] | null}) => {
+	const [userPages] = useQuery(getUsers, {where: {role: 'MANUFACTURER'}, take: 100, skip: 0});
+
+	const possibleManufacturers = userPages.users;
+
+	const [updateOrderMutation, {isLoading, isSuccess}] = useMutation(updateOrder);
+	const [value, setValue] = useState(currentManufacturer);
+	const [changeSuccess, setChangeSuccess] = useState(false);
+
+	useTimeout(() => {
+		setChangeSuccess(false);
+	}, isSuccess ? 500 : null);
+
+	const handleChange = useCallback(async (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const {value} = event.target;
+
+		const result = await updateOrderMutation({
+			where: {id: orderId},
+			data: {
+				assignedToId: value === 'none' ? null : Number.parseInt(value, 10)
+			}
+		});
+
+		setValue(result.assignedToId);
+		setChangeSuccess(true);
+	}, []);
+
+	return (
+		<Select
+			disabled={isLoading}
+			bg={changeSuccess ? 'green.200' : 'transparent'}
+			onChange={handleChange}
+			icon={value === null ? <WarningIcon/> : undefined}
+			size="sm">
+			<option value="none" selected={value === null}>Unassigned</option>
+			{
+				possibleManufacturers.map(m => (
+					<option key={m.id} value={m.id.toString()} selected={m.id === value}>{m.name}</option>
+				))
+			}
+		</Select>
+	);
 };
 
 const OrdersTableStatic = (props: OrdersTableStaticProps) => (
@@ -34,6 +81,7 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 							<Th>Buyer</Th>
 						)
 					}
+					<Th>Manufacturer</Th>
 					<Th>Status</Th>
 					<Th>Items</Th>
 				</Tr>
@@ -43,7 +91,7 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 					props.isLoading ? Array.from(Array.from({length: 3}).keys()).map(id => (
 						<Tr key={id}>
 							<Td>
-								<Skeleton isLoaded={!props.isLoading}>id</Skeleton>
+								<Skeleton isLoaded={!props.isLoading}>cko64n6ed1963kcbk5yvke65g</Skeleton>
 							</Td>
 							<Td>
 								<Skeleton isLoaded={!props.isLoading}>yesterday</Skeleton>
@@ -55,6 +103,9 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 									</Td>
 								)
 							}
+							<Td>
+								<Skeleton isLoaded={!props.isLoading}>Manufacturer</Skeleton>
+							</Td>
 							<Td>
 								<Skeleton isLoaded={!props.isLoading}>created</Skeleton>
 							</Td>
@@ -80,7 +131,20 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 								)
 							}
 							<Td>
-								{order.status}
+								{
+									props.allowManufacturerAssignment ? (
+										<ManufacturerSelect orderId={order.id} currentManufacturer={order.assignedToId}/>
+									) : (
+										order.assignedTo ? order.assignedTo.name : (
+											<Tag colorScheme="yellow">Unassigned</Tag>
+										)
+									)
+								}
+							</Td>
+							<Td>
+								<Tag>
+									{order.status}
+								</Tag>
 							</Td>
 							<Td>
 								<Link passHref href={`/orders/${order.id}`}>
@@ -105,7 +169,7 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 );
 
 const OrdersTableLive = (props: OrdersTableLiveProps) => {
-	const {userId} = useAuthenticatedSession();
+	const session = useAuthenticatedSession();
 
 	const [
 		orderPages,
@@ -115,10 +179,11 @@ const OrdersTableLive = (props: OrdersTableLiveProps) => {
 		({take, skip} = {take: 10, skip: 0}) => ({
 			where: {
 				...props.where,
-				...(props.showOwnOrdersOnly ? {cart: {userId}} : {})
+				...(props.showOwnOrdersOnly ? {cart: {userId: session.userId}} : {})
 			},
 			orderBy: {createdAt: 'desc' as Prisma.SortOrder},
 			include: {
+				assignedTo: true,
 				cart: {
 					select: {
 						orderedAt: true,
@@ -142,6 +207,7 @@ const OrdersTableLive = (props: OrdersTableLiveProps) => {
 		hasNextPage={hasNextPage}
 		fetchNextPage={fetchNextPage}
 		isFetchingNextPage={isFetchingNextPage}
+		allowManufacturerAssignment={session.roles.includes('ADMIN')}
 		{...props}/>;
 };
 
