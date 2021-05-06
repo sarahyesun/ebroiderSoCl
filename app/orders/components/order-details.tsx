@@ -49,7 +49,7 @@ const OrderDetailsStatic = ({order, isLoading = false}: {order?: OrderWithExtras
 			</VStack>
 
 			{
-				order?.address || isLoading ? (
+				(order?.address || isLoading) ? (
 					<VStack alignItems="flex-start">
 						<Heading mb={1}>Address</Heading>
 
@@ -88,7 +88,7 @@ const OrderDetailsStatic = ({order, isLoading = false}: {order?: OrderWithExtras
 					</Thead>
 					<Tbody>
 						{
-							isLoading ? Array.from(Array.from({length: 3}).keys()).map(i => (
+							isLoading ? [-3, -2, -1].map(i => (
 								<Tr key={i}>
 									<Td><Skeleton>A sample design</Skeleton></Td>
 									<Td><Skeleton>1</Skeleton></Td>
@@ -132,6 +132,7 @@ const OrderDetailsLive = ({id}: {id: string}) => {
 				include: {
 					items: {
 						select: {
+							designId: true,
 							quantity: true,
 							design: true
 						}
@@ -145,7 +146,11 @@ const OrderDetailsLive = ({id}: {id: string}) => {
 	return <OrderDetailsStatic order={order as OrderWithExtras}/>;
 };
 
-const OrderDetails = ({id}: {id: string}) => {
+const OrderDetails = ({id}: {id?: string}) => {
+	if (!id) {
+		return <OrderDetailsStatic isLoading/>;
+	}
+
 	return (
 		<Suspense fallback={<OrderDetailsStatic isLoading/>}>
 			<OrderDetailsLive id={id}/>

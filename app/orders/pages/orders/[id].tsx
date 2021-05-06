@@ -6,12 +6,8 @@ import OrderDetails from 'app/orders/components/order-details';
 const OrderPage: BlitzPage = () => {
 	const id = useParam('id');
 
-	if (!id) {
-		return null;
-	}
-
 	return (
-		<OrderDetails id={id as string}/>
+		<OrderDetails id={id as string | undefined}/>
 	);
 };
 
