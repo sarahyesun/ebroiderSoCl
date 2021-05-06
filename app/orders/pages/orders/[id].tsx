@@ -1,6 +1,5 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import {BlitzPage, useParam} from '@blitzjs/core';
-import {Container, Box, Heading} from '@chakra-ui/react';
 import Layout from 'app/layouts/Layout';
 import OrderDetails from 'app/orders/components/order-details';
 

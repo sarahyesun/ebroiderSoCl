@@ -27,6 +27,11 @@ const OrderDetailsStatic = ({order, isLoading = false}: {order?: OrderWithExtras
 						{order?.id ?? 'cko258u8o0024lobkkqd5dfny'}
 					</Skeleton>
 
+					<Text fontWeight="bold">Date:</Text>
+					<Skeleton isLoaded={!isLoading}>
+						{order?.cart.orderedAt ? `${order.cart.orderedAt.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} ${order.cart.orderedAt.toLocaleDateString()}` : 'yesterday'}
+					</Skeleton>
+
 					<Text fontWeight="bold">Status:</Text>
 					<Skeleton isLoaded={!isLoading}>
 						<Tag colorScheme={'PAID' ? 'yellow' : 'green'}>

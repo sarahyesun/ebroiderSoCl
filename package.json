@@ -114,7 +114,8 @@
       "unicorn/filename-case": "off",
       "import/no-mutable-exports": "off",
       "no-alert": "off",
-      "import/no-extraneous-dependencies": "off"
+      "import/no-extraneous-dependencies": "off",
+      "unicorn/no-array-reduce": "off"
     }
   },
   "private": true
