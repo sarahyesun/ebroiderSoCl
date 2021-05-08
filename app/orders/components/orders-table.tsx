@@ -18,6 +18,7 @@ type OrdersTableStaticProps = OrdersTableProps & {
 	fetchNextPage?: () => void;
 	isFetchingNextPage?: boolean;
 	allowManufacturerAssignment?: boolean;
+	allowStatusEdit?: boolean;
 };
 
 type OrdersTableLiveProps = OrdersTableProps & {
@@ -89,7 +90,7 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 							<Td>
 								{
 									props.allowManufacturerAssignment ? (
-										<ManufacturerSelect orderId={order.id} currentManufacturer={order.assignedToId}/>
+										<ManufacturerSelect orderId={order.id} currentManufacturer={order.assignedToId} disabled={Boolean(order.canceledAt)}/>
 									) : (
 										order.assignedTo ? order.assignedTo.name : (
 											<Tag colorScheme="yellow">Unassigned</Tag>
@@ -98,7 +99,13 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 								}
 							</Td>
 							<Td>
-								<StatusSelect orderId={order.id} currentStatus={order.status}/>
+								{
+									props.allowStatusEdit ? (
+										<StatusSelect orderId={order.id} currentStatus={order.status} canceledAt={order.canceledAt}/>
+									) : (
+										<Tag>{order.status}</Tag>
+									)
+								}
 							</Td>
 							<Td>
 								<Link passHref href={`/orders/${order.id}`}>
@@ -162,6 +169,7 @@ const OrdersTableLive = (props: OrdersTableLiveProps) => {
 		fetchNextPage={fetchNextPage}
 		isFetchingNextPage={isFetchingNextPage}
 		allowManufacturerAssignment={session.roles.includes('ADMIN')}
+		allowStatusEdit={session.roles.includes('ADMIN')}
 		{...props}/>;
 };
 

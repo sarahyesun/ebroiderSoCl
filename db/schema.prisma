@@ -88,6 +88,7 @@ model Order {
   paymentIntentId String?     @unique
   receiptUrl      String?
   status          OrderStatus @default(CREATED)
+  canceledAt      DateTime?
 
   assignedTo   User? @relation(fields: [assignedToId], references: [id])
   assignedToId Int?

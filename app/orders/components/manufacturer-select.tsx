@@ -6,7 +6,7 @@ import {Order, User} from 'db';
 import updateOrder from 'app/orders/mutations/updateOrder';
 import {WarningIcon} from '@chakra-ui/icons';
 
-const ManufacturerSelect = ({orderId, currentManufacturer}: {orderId: Order['id']; currentManufacturer: User['id'] | null}) => {
+const ManufacturerSelect = ({orderId, currentManufacturer, disabled}: {orderId: Order['id']; currentManufacturer: User['id'] | null; disabled: boolean}) => {
 	const [userPages] = useQuery(getUsers, {where: {role: 'MANUFACTURER'}, take: 100, skip: 0});
 
 	const possibleManufacturers = userPages.users;
@@ -35,7 +35,7 @@ const ManufacturerSelect = ({orderId, currentManufacturer}: {orderId: Order['id'
 
 	return (
 		<Select
-			disabled={isLoading}
+			disabled={isLoading || disabled}
 			bg={changeSuccess ? 'green.200' : 'transparent'}
 			onChange={handleChange}
 			icon={value === null ? <WarningIcon/> : undefined}

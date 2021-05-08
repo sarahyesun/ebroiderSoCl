@@ -1,10 +1,10 @@
 import React, {useState, useCallback} from 'react';
-import {Select, useTimeout} from '@chakra-ui/react';
+import {Select, Tag, useTimeout} from '@chakra-ui/react';
 import updateOrder from 'app/orders/mutations/updateOrder';
 import {useMutation} from 'blitz';
 import {OrderStatus, Order} from 'db';
 
-const StatusSelect = ({orderId, currentStatus}: {orderId: Order['id']; currentStatus: OrderStatus}) => {
+const StatusSelect = ({orderId, currentStatus, canceledAt}: {orderId: Order['id']; currentStatus: OrderStatus; canceledAt: Date | null}) => {
 	const [updateOrderMutation, {isLoading, isSuccess}] = useMutation(updateOrder);
 	const [value, setValue] = useState(currentStatus);
 	const [changeSuccess, setChangeSuccess] = useState(false);
@@ -19,6 +19,14 @@ const StatusSelect = ({orderId, currentStatus}: {orderId: Order['id']; currentSt
 		setValue(result.status);
 		setChangeSuccess(true);
 	}, []);
+
+	if (canceledAt) {
+		return (
+			<Tag colorScheme="yellow">
+				Canceled
+			</Tag>
+		);
+	}
 
 	return (
 		<Select
