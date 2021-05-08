@@ -1,12 +1,11 @@
-import React, {Suspense, useCallback, useState} from 'react';
-import {InfoIcon, WarningIcon} from '@chakra-ui/icons';
-import {Table, Thead, Tr, Th, Tbody, Td, Button, Skeleton, Tag, useTimeout, Select} from '@chakra-ui/react';
+import React, {Suspense} from 'react';
+import {InfoIcon} from '@chakra-ui/icons';
+import {Table, Thead, Tr, Th, Tbody, Td, Button, Skeleton, Tag} from '@chakra-ui/react';
 import {Cart, CartItem, Order, Prisma, User} from 'db';
-import {Link, useAuthenticatedSession, useInfiniteQuery, useMutation, useQuery} from 'blitz';
+import {Link, useAuthenticatedSession, useInfiniteQuery} from 'blitz';
 import getOrders from '../queries/getOrders';
-import getUsers from 'app/users/queries/getUsers';
-import updateOrder from '../mutations/updateOrder';
-import {m} from 'framer-motion';
+import ManufacturerSelect from './manufacturer-select';
+import StatusSelect from './status-select';
 
 type OrdersTableProps = {
 	showBuyer?: boolean;
@@ -24,51 +23,6 @@ type OrdersTableStaticProps = OrdersTableProps & {
 type OrdersTableLiveProps = OrdersTableProps & {
 	where: Prisma.OrderWhereInput;
 	showOwnOrdersOnly?: boolean;
-};
-
-const ManufacturerSelect = ({orderId, currentManufacturer}: {orderId: Order['id']; currentManufacturer: User['id'] | null}) => {
-	const [userPages] = useQuery(getUsers, {where: {role: 'MANUFACTURER'}, take: 100, skip: 0});
-
-	const possibleManufacturers = userPages.users;
-
-	const [updateOrderMutation, {isLoading, isSuccess}] = useMutation(updateOrder);
-	const [value, setValue] = useState(currentManufacturer);
-	const [changeSuccess, setChangeSuccess] = useState(false);
-
-	useTimeout(() => {
-		setChangeSuccess(false);
-	}, isSuccess ? 500 : null);
-
-	const handleChange = useCallback(async (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const {value} = event.target;
-
-		const result = await updateOrderMutation({
-			where: {id: orderId},
-			data: {
-				assignedToId: value === 'none' ? null : Number.parseInt(value, 10)
-			}
-		});
-
-		setValue(result.assignedToId);
-		setChangeSuccess(true);
-	}, []);
-
-	return (
-		<Select
-			disabled={isLoading}
-			bg={changeSuccess ? 'green.200' : 'transparent'}
-			onChange={handleChange}
-			icon={value === null ? <WarningIcon/> : undefined}
-			value={value ?? 'none'}
-			size="sm">
-			<option value="none">Unassigned</option>
-			{
-				possibleManufacturers.map(m => (
-					<option key={m.id} value={m.id}>{m.name}</option>
-				))
-			}
-		</Select>
-	);
 };
 
 const OrdersTableStatic = (props: OrdersTableStaticProps) => (
@@ -144,9 +98,7 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 								}
 							</Td>
 							<Td>
-								<Tag>
-									{order.status}
-								</Tag>
+								<StatusSelect orderId={order.id} currentStatus={order.status}/>
 							</Td>
 							<Td>
 								<Link passHref href={`/orders/${order.id}`}>

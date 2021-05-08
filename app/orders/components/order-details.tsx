@@ -146,6 +146,8 @@ const OrderDetailsLive = ({id}: {id: string}) => {
 	return <OrderDetailsStatic order={order as OrderWithExtras}/>;
 };
 
+// TODO: add cancel order action
+
 const OrderDetails = ({id}: {id?: string}) => {
 	if (!id) {
 		return <OrderDetailsStatic isLoading/>;
