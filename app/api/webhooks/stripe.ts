@@ -46,7 +46,6 @@ const handleStripeEvent = async (request: NextApiRequest, response: NextApiRespo
 				orderedAt: new Date()
 			}
 		});
-		// TODO: send confirmation email
 	}
 
 	response.end('');

@@ -1,4 +1,4 @@
-import type {NextApiRequest, NextApiResponse} from 'next';
+import {BlitzApiHandler, getSession} from 'blitz';
 import archiver from 'archiver';
 import fs from 'fs';
 import path from 'path';
@@ -6,8 +6,8 @@ import {UPLOAD_DIR} from 'utils/config';
 import prisma from 'db';
 import mimeToExtension from 'utils/mime-to-extension';
 
-const handleDownloadRequest = async (request: NextApiRequest, response: NextApiResponse) => {
-	// TODO: add auth
+const handleDownloadRequest: BlitzApiHandler = async (request, response) => {
+	const session = await getSession(request, response);
 
 	const {query: {id}} = request;
 
@@ -22,6 +22,11 @@ const handleDownloadRequest = async (request: NextApiRequest, response: NextApiR
 
 	if (!design) {
 		response.status(404).end();
+		return;
+	}
+
+	if (!design.isPublic && design.userId !== session.userId && !session.roles?.includes('ADMIN')) {
+		response.status(401).end();
 		return;
 	}
 

@@ -207,8 +207,6 @@ const OrderDetailsLive = ({id}: {id: string}) => {
 	return <OrderDetailsStatic order={order as OrderWithExtras} onRefetch={refetch}/>;
 };
 
-// TODO: add cancel order action
-
 const OrderDetails = ({id}: {id?: string}) => {
 	if (!id) {
 		return <OrderDetailsStatic isLoading/>;

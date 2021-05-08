@@ -6,8 +6,6 @@ import { UPLOAD_DIR } from 'utils/config';
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {query: { id }} = req;
 
-  // TODO: add auth
-
   if (req.query.type) {
     res.setHeader('Content-Type', req.query.type)
   }
