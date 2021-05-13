@@ -1,7 +1,8 @@
-FROM node:15 AS base
+FROM node:lts AS base
 
 RUN apt-get update
-RUN apt-get install -y python3 python3-pip
+RUN apt-get install -y python3 python3-pip ca-certificates
+RUN apt-get clean
 
 WORKDIR /usr/app
 
