@@ -10,6 +10,6 @@ module.exports = {
 		})
 	],
 	images: {
-		domains: ['source.unsplash.com', 'images.unsplash.com', 'localhost', 'socl.frigate.me']
+		domains: ['source.unsplash.com', 'images.unsplash.com', 'localhost', 'socl.me.mtu.edu']
 	}
 };
