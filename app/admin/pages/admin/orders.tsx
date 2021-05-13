@@ -2,10 +2,11 @@ import React from 'react';
 import {BlitzPage} from 'blitz';
 import Layout from 'app/layouts/Layout';
 import OrdersTable from 'app/orders/components/orders-table';
+import {OrderStatus} from 'db';
 
 const OrdersPage: BlitzPage = () => {
 	return (
-		<OrdersTable showBuyer where={{}}/>
+		<OrdersTable showBuyer where={{status: {not: OrderStatus.CREATED}}}/>
 	);
 };
 
