@@ -34,6 +34,13 @@ const AuthenticatedLinks = ({show}: { show: boolean }) => {
 		});
 	}
 
+	if (roles?.includes('MANUFACTURER')) {
+		links.push({
+			href: '/manufacturer',
+			label: 'Assigned Orders'
+		});
+	}
+
 	return (
 		<>
 			<Box

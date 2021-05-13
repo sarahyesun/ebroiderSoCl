@@ -24,6 +24,7 @@ type OrdersTableStaticProps = OrdersTableProps & {
 type OrdersTableLiveProps = OrdersTableProps & {
 	where: Prisma.OrderWhereInput;
 	showOwnOrdersOnly?: boolean;
+	showAssignedOrdersOnly?: boolean;
 };
 
 const OrdersTableStatic = (props: OrdersTableStaticProps) => (
@@ -103,7 +104,7 @@ const OrdersTableStatic = (props: OrdersTableStaticProps) => (
 									props.allowStatusEdit ? (
 										<StatusSelect orderId={order.id} currentStatus={order.status} canceledAt={order.canceledAt}/>
 									) : (
-										<Tag>{order.status}</Tag>
+										<Tag colorScheme={order.canceledAt ? 'yellow' : undefined}>{order.canceledAt ? 'Canceled' : order.status}</Tag>
 									)
 								}
 							</Td>
@@ -140,7 +141,8 @@ const OrdersTableLive = (props: OrdersTableLiveProps) => {
 		({take, skip} = {take: 10, skip: 0}) => ({
 			where: {
 				...props.where,
-				...(props.showOwnOrdersOnly ? {cart: {userId: session.userId}} : {})
+				...(props.showOwnOrdersOnly ? {cart: {userId: session.userId}} : {}),
+				...(props.showAssignedOrdersOnly ? {assignedToId: session.userId} : {})
 			},
 			orderBy: {createdAt: 'desc' as Prisma.SortOrder},
 			include: {
@@ -169,7 +171,7 @@ const OrdersTableLive = (props: OrdersTableLiveProps) => {
 		fetchNextPage={fetchNextPage}
 		isFetchingNextPage={isFetchingNextPage}
 		allowManufacturerAssignment={session.roles.includes('ADMIN')}
-		allowStatusEdit={session.roles.includes('ADMIN')}
+		allowStatusEdit={session.roles.includes('ADMIN') || session.roles.includes('MANUFACTURER')}
 		{...props}/>;
 };
 

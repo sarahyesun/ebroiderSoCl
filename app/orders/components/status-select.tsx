@@ -36,7 +36,7 @@ const StatusSelect = ({orderId, currentStatus, canceledAt}: {orderId: Order['id'
 			value={value}
 			size="sm">
 			{
-				Object.values(OrderStatus).map(r => (
+				Object.values(OrderStatus).filter(v => v !== OrderStatus.CREATED).map(r => (
 					<option key={r} value={r}>{r}</option>
 				))
 			}

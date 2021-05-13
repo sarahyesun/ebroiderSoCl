@@ -2,7 +2,7 @@ import {Ctx, paginate} from 'blitz';
 import db, {Prisma} from 'db';
 
 export default async function getUsers({query, take, skip, where = {}}: {query?: string; take: number; skip: number; where?: Prisma.UserWhereInput}, ctx: Ctx) {
-	ctx.session.$authorize('ADMIN');
+	ctx.session.$authorize(['ADMIN', 'MANUFACTURER']);
 
 	const w: Prisma.UserWhereInput = where;
 
