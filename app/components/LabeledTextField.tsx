@@ -43,12 +43,15 @@ LabeledTextFieldProps
 	const {size, ...propsWithoutSize} = props as JSX.IntrinsicElements['input'];
 	const {value, ...propsWithoutValue} = propsWithoutSize;
 
+	// Issue with typing in <Checkbox/>?
+	const {'aria-invalid': _, ...propsWithoutInvalid} = propsWithoutValue;
+
 	return (
 		<FormControl isInvalid={normalizedError && touched} mb={6} {...outerProps}>
 			{props.type === 'checkbox' ? (
 				<Checkbox
 					{...input}
-					{...propsWithoutValue}
+					{...propsWithoutInvalid}
 					defaultChecked={input.checked}
 					ref={ref as React.ForwardedRef<HTMLInputElement>}
 					isDisabled={submitting}
